@@ -1,0 +1,228 @@
+﻿@{
+    ViewBag.Title = "Archivo PQRS";
+}
+
+@model List<controlLuces.Models.PqrsModel>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to bottom, #87CEEB, #007bff) no-repeat;
+            background-size: cover;
+            font-family: 'Product Sans', sans-serif;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container-body-content {
+            background-color: white;
+            padding: 5%;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            max-width: 100%; 
+            width: 90%; 
+            margin: auto;
+            transition: background-color 0.3s ease;
+            overflow: hidden; 
+        }
+
+        .card-body {
+            text-align: center;
+        }
+
+        .forms {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+            margin-bottom: 20px;
+            transition: box-shadow 0.3s ease;
+        }
+
+            .forms:hover {
+                box-shadow: 0 0 20px rgba(0, 123, 255, 0.8);
+            }
+
+        .btn {
+            font-family: Arial, sans-serif;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #fff;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #0056b3;
+            }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: #fff;
+        }
+
+            .btn-danger:hover {
+                background-color: #bd2130;
+                border-color: #bd2130;
+            }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+            color: #fff;
+        }
+
+            .btn-success:hover {
+                background-color: #218838;
+                border-color: #218838;
+            }
+
+        .table {
+            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            transition: box-shadow 0.3s ease;
+        }
+
+            .table:hover {
+                box-shadow: 0 0 20px rgba(0, 123, 255, 0.8);
+            }
+
+        .tuclase {
+            background-color: #17a2b8;
+            color: #fff;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .table-responsive {
+            overflow-x: auto; /* Desplazamiento horizontal en pantallas pequeñas */
+        }
+    </style>
+</head>
+<body>
+    <div class="container-body-content">
+        <h1 class="text-center mb-4 tuclase"><i class="fas fa-history mr-2"></i>Archivo PQRS</h1>
+        <div class="card-body">
+            <form method="post" action="@Url.Action("BuscarPqrs", "pqrs")" class="forms">
+                <div class="input-group mb-3">
+                    <select id="tipoBusqueda" name="tipoBusqueda" class="form-control">
+                        <option>Seleccionar</option>
+                        <option value="consecutivo">Por Consecutivo</option>
+                        <option value="fecha">Por Fecha</option>
+                    </select>
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-search mr-2"></i>Buscar</button>
+                    </div>
+                </div>
+                <div id="rangoFecha" style="display: none;">
+                    <div class="input-group mb-3">
+                        <input type="date" id="desde" name="desde" class="form-control">
+                        <div class="input-group-append">
+                            <span class="input-group-text">Desde</span>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="date" id="hasta" name="hasta" class="form-control">
+                        <div class="input-group-append">
+                            <span class="input-group-text">Hasta</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="campoConsecutivo" style="display: none;">
+                    <div class="input-group mb-3">
+                        <input type="text" id="Idpqrs" name="Idpqrs" class="form-control">
+                        <div class="input-group-append">
+                            <span class="input-group-text">Número de Consecutivo</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Consecutivo</th>
+                        <th>Fecha</th>
+                        <th>Tipo</th>
+                        <th>Canal</th>
+                        <th>Dirección</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var pqrs in Model)
+                        {
+                            <tr>
+                                <td>@pqrs.Idpqrs</td>
+                                <td>@pqrs.FechaRegistro</td>
+                                <td>@pqrs.Tipopqrs</td>
+                                <td>@pqrs.Canal</td>
+                                <td>@pqrs.DireccionAfectacion</td>
+                                <td>@pqrs.DescripcionAfectacion</td>
+                                <td>
+                                    <a href="@Url.Action("VerInfo", "pqrs", new { id = pqrs.Idpqrs })" class="btn btn-primary btn-sm"><i class="fas fa-eye mr-2"></i>Ver Info</a>
+                                    <a href="@Url.Action("EliminarPqrs", "pqrs", new { id = pqrs.Idpqrs })" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt mr-2"></i>Eliminar</a>
+                                    <a href="@Url.Action("CrearOrdenDeServicio", "Ordenes", new { idPqrs = pqrs.Idpqrs, descripcionAfectacion = pqrs.DescripcionAfectacion })" class="btn btn-success btn-sm"><i class="fas fa-plus mr-2"></i>Crear Orden</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7">No se encontraron registros.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center">
+            <a href="@Url.Action("MostrarPqrs", "pqrs")" class="btn btn-primary mb-3"><i class="fas fa-list mr-2"></i>Ver todas las PQRS</a>
+            <a href="@Url.Action("inicio", "login")" class="btn btn-danger mb-3"><i class="fas fa-arrow-left mr-2"></i>Atrás</a>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#tipoBusqueda").change(function () {
+                if ($(this).val() == "fecha") {
+                    $("#rangoFecha").show();
+                    $("#campoConsecutivo").hide();
+                } else if ($(this).val() == "consecutivo") {
+                    $("#rangoFecha").hide();
+                    $("#campoConsecutivo").show();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+﻿@{
+    ViewBag.Title = "EditarUsuarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model controlLuces.Models.UsuarioModel
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            padding-top: 40px;
+        }
+
+        .card {
+            margin-top: 30px;
+            box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+            border: none;
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            position: relative;
+            border-radius: 10px 10px 0 0;
+        }
+
+            .card-header h4 {
+                margin-bottom: 0;
+                font-size: 24px;
+            }
+
+            .card-header a.btn {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                right: 20px;
+                color: white;
+            }
+
+                .card-header a.btn:hover {
+                    color: #f8f9fa;
+                }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            border-radius: 25px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            border-radius: 25px;
+            font-size: 18px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #0056b3;
+            }
+
+        .text-muted {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card border-dark">
+
+                    <article class="card-body">
+                        <form action="@Url.Action("EditarUsuario", "Login", new { id =Model.IdUsuario })" method="post">
+
+                            <div class="form-group">
+                                <label><i class="fas fa-user"></i> Nombre</label>
+                                <input type="text" class="form-control" placeholder="Ingrese su nombre" name="Nombre">
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fas fa-user"></i> Apellido</label>
+                                <input type="text" class="form-control" placeholder="Ingrese su apellido" name="Apellido">
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fas fa-user"></i>Rol</label>
+                                <input type="text" class="form-control" placeholder="Ingrese el Rol" name="Rol">
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fas fa-envelope"></i> Correo electrónico</label>
+                                <input type="email" class="form-control" placeholder="Ingrese su correo electrónico" name="Correo">
+                                <small class="form-text text-muted">Nunca compartiremos su correo electrónico con nadie más.</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fas fa-id-card"></i> Cédula</label>
+                                <input type="text" class="form-control" placeholder="Ingrese su número de cédula" name="IdUsuario">
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fas fa-lock"></i> Contraseña</label>
+                                <input class="form-control" type="password" placeholder="Ingrese su contraseña" name="Clave">
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-user-plus"></i>Guardar</button>
+                            </div>
+                            <small class="text-muted">Al hacer clic en el botón 'editar', usted acepta nuestros <br> Términos de uso y Política de privacidad.</small>
+                        </form>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
