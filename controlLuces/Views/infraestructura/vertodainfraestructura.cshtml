@@ -1,4 +1,4 @@
-﻿@{
+﻿﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -182,8 +182,8 @@
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
             padding: 20px;
-            flex: 0 0 43%; 
-            height: 650px; 
+            flex: 0 0 43%;
+            height: 650px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -224,13 +224,13 @@
             }
 
         .btn-led {
-            background-color: #F59E56; 
-            border-color: #F59E56; 
+            background-color: #F59E56;
+            border-color: #F59E56;
         }
 
             .btn-led:hover {
-                background-color: #e48940; 
-                border-color: #d57a3a; 
+                background-color: #e48940;
+                border-color: #d57a3a;
             }
     </style>
 </head>
@@ -370,11 +370,11 @@
                 });
             });
 
-            
+
             function sortTable() {
                 var rows = $('#infraestructuraTable tr').get();
                 rows.sort(function(a, b) {
-                    var A = $(a).children('td').eq(0).text().toUpperCase(); 
+                    var A = $(a).children('td').eq(0).text().toUpperCase();
                     var B = $(b).children('td').eq(0).text().toUpperCase();
 
                     if ($.isNumeric(A) && $.isNumeric(B)) {
@@ -395,7 +395,7 @@
                 });
             }
 
-           
+
             sortTable();
         });
     </script>

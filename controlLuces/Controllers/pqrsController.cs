@@ -75,8 +75,6 @@ namespace controlLuces.Controllers
         }
 
         [HttpPost]
-
-
         public ActionResult Enviarpqrs(PqrsModel pqrs, HttpPostedFileBase imagen)
         {
             try
@@ -99,17 +97,17 @@ namespace controlLuces.Controllers
                 }
 
                 // Obtener la fecha y hora actual del sistema en la zona horaria de Colombia
-                DateTime fechaRegistro = DateTime.Now; // Obtener fecha y hora actual del sistema
+                DateTime fechaRegistro = DateTime.UtcNow; // Obtener fecha y hora en UTC
                 TimeZoneInfo tzColombia = TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time");
-                fechaRegistro = TimeZoneInfo.ConvertTime(fechaRegistro, tzColombia);
+                fechaRegistro = TimeZoneInfo.ConvertTimeFromUtc(fechaRegistro, tzColombia);
 
                 connectionString();
                 con.Open();
                 com.Connection = con;
 
                 com.CommandText = @"INSERT INTO pqrs (FechaRegistro, Tipopqrs, Canal, Nombre, Apellido, TipoDoc, Documento, Telefono, Correo, Referencia, DireccionAfectacion, BarrioAfectacion, TipoAlumbrado, DescripcionAfectacion, Imagen, Estado) 
-                            VALUES (@FechaRegistro, @Tipopqrs, @Canal, @Nombre, @Apellido, @TipoDoc, @Documento, @Telefono, @Correo, @Referencia, @DireccionAfectacion, @BarrioAfectacion, @TipoAlumbrado, @DescripcionAfectacion, @Imagen, @Estado);
-                            SELECT SCOPE_IDENTITY();";
+                    VALUES (@FechaRegistro, @Tipopqrs, @Canal, @Nombre, @Apellido, @TipoDoc, @Documento, @Telefono, @Correo, @Referencia, @DireccionAfectacion, @BarrioAfectacion, @TipoAlumbrado, @DescripcionAfectacion, @Imagen, @Estado);
+                    SELECT SCOPE_IDENTITY();";
 
                 // Agregar parámetro para FechaRegistro
                 com.Parameters.AddWithValue("@FechaRegistro", fechaRegistro);
@@ -150,6 +148,8 @@ namespace controlLuces.Controllers
                 return RedirectToAction("Inicio", "Login");
             }
         }
+
+
 
         public ActionResult MostrarPqrs()
         {

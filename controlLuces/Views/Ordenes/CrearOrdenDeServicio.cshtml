@@ -1,4 +1,4 @@
-﻿@{
+﻿﻿@{
     ViewBag.Title = "CrearOrdenDeServicio";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -42,6 +42,8 @@
             margin-bottom: 20px;
             height: 100%;
             transition: box-shadow 0.3s ease-in-out;
+            /* Agregado para que el color del fondo del contenedor no sea blanco */
+            background-color: #f9f9f9;
         }
 
             .card:hover {
@@ -49,8 +51,8 @@
             }
 
         .card-header {
-            background-color: #17a2b8;
-            color: #fff;
+            background-color: #17a2b8; /* Color base */
+            color: #ffffff; /* Color blanco para texto */
             border-bottom: none;
             font-size: 36px;
             text-transform: uppercase;
@@ -58,11 +60,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+            background-image: linear-gradient(to right, #17a2b8, #138496); /* Degradado */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 15px; /* Espacio adicional */
         }
 
             .card-header i {
                 margin-right: 10px;
+                color: #ffffff; /* Color blanco para ícono */
+                transition: color 0.3s ease-in-out;
             }
+
 
         .card-body {
             padding: 0;
@@ -70,6 +79,8 @@
             flex-direction: column;
             justify-content: space-between;
             height: 100%;
+            /* Mantener la consistencia del fondo dentro de la tarjeta */
+            background-color: #f9f9f9;
         }
 
         .btn {
@@ -128,6 +139,31 @@
         .btn-back {
             width: 150px;
         }
+
+        /* Estilo para el contenido cargado dinámicamente dentro del contenedor de formularios */
+        #formularioContainer {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #e0e0e0;
+            /* Redondear esquinas inferiores para integrar mejor con la tarjeta */
+            border-radius: 0 0 10px 10px;
+        }
+
+        .nav-tabs .nav-link {
+            color: #555;
+            transition: color 0.3s ease;
+            font-weight: 600;
+        }
+
+            .nav-tabs .nav-link.active {
+                color: #17a2b8;
+                border-color: #17a2b8;
+                border-bottom-color: transparent;
+            }
+
+            .nav-tabs .nav-link:hover {
+                color: #17a2b8;
+            }
     </style>
     <script>
         $(document).ready(function () {

@@ -1,7 +1,7 @@
-﻿@{
+﻿﻿@{
     var codigo = Model?.codigo ?? "N/A";
-    var latitud = Model?.latitud.ToString() ?? "0.000000";
-    var longitud = Model?.longitud.ToString() ?? "0.000000";
+    var latitud = Model?.latitud.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0.000000";
+    var longitud = Model?.longitud.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0.000000";
     var direccion = Model?.direccion ?? "N/A";
     var configuracion = Model?.configuracion ?? "N/A";
     var fabricante = Model?.fabricante ?? "N/A";

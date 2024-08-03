@@ -1,18 +1,18 @@
-﻿@{
+﻿﻿@{
     Layout = null;
 }
+@model List<controlLuces.Models.CuadrillaModel>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta charset="utf-8" />
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="~/Content/css/orden.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <link href="~/Content/css/formmantenimiento.css" rel="stylesheet" />
     <style>
         body {
@@ -50,7 +50,7 @@
 
             .form-group .required::after {
                 content: '*';
-                color: #FF4500; /* Naranja más fuerte */
+                color: #FF4500;
                 margin-left: 5px;
             }
 
@@ -97,17 +97,16 @@
             font-weight: bold;
         }
     </style>
-    <title>_FormularioMontaje</title>
+    <title>_FormularioMantenimiento</title>
     <script>
         $(document).ready(function () {
-            $('#ordenForm').submit(function (event) {
-                event.preventDefault(); // Evita que el formulario se envíe de la forma tradicional
+            $('form').submit(function (event) {
+                event.preventDefault();
 
-                var form = $(this);
                 $.ajax({
-                    url: form.attr('action'),
-                    type: form.attr('method'),
-                    data: form.serialize(),
+                    url: $(this).attr('action'),
+                    type: $(this).attr('method'),
+                    data: $(this).serialize(),
                     success: function (response) {
                         if (response.success) {
                             Swal.fire({
@@ -123,18 +122,14 @@
                         } else {
                             Swal.fire({
                                 title: 'Error',
-                                text: 'Hubo un problema al crear la orden. Inténtelo nuevamente.',
-                                icon: 'error'
+                                text: response.message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
                             });
                         }
                     },
                     error: function (xhr, status, error) {
                         console.error(xhr.responseText);
-                        Swal.fire({
-                            title: 'Error',
-                            text: 'Hubo un problema al crear la orden. Inténtelo nuevamente.',
-                            icon: 'error'
-                        });
                     }
                 });
             });
@@ -143,7 +138,7 @@
 </head>
 <body>
     <div class="container">
-        <form id="ordenForm" action="@Url.Action("insertarOrdenMon","Ordenes")" method="post">
+        <form action="@Url.Action("insertarOrdenMan", "Ordenes" )" method="post">
             <div class="register-form">
                 <div class="form">
                     <div class="form-content">
@@ -159,82 +154,89 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="required">Código Del Nuevo Elemento</label>
-                                    <input type="text" name="CodigoDeElemento" class="form-control" placeholder="" required />
+                                    <label class="required">Código Del Elemento</label>
+                                    <input type="text" id="codigoDeElemento" name="CodigoDeElemento" class="form-control" placeholder="" />
+                                    <div id="mensaje"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="form-content">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="required">Elemento Relacionado:</label>
-                                <input type="text" name="ElementoRelacionado" class="form-control" id="pqrsIdInput" placeholder="" value="@ViewBag.IdPqrs" readonly />
+                <div class="form">
+                    <div class="form-content">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="required">Elemento Relacionado :</label>
+                                    <input type="hidden" id="pqrsIdHidden" value="" />
+                                    <input type="text" name="ElementoRelacionado" class="form-control" id="pqrsIdInput" placeholder="" value="@ViewBag.IdPqrs" readonly />
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Problema Relacionado:</label>
+                                    <input type="hidden" id="pqrsIdHidden" value="" />
+                                    <textarea name="ProblemaRelacionado" class="form-control" id="pqrsIdInput" placeholder="" readonly>@ViewBag.descripcionAfectacion</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Orden Prioridad:</label>
+                                    <select id="OrdenPrioridad" name="OrdenPrioridad" class="form-control" required>
+                                        <option value="">Seleccione</option>
+                                        <option value="Baja">Baja</option>
+                                        <option value="Media">Media</option>
+                                        <option value="Alta">Alta</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Tipo De Orden:</label>
+                                    <select id="TipoDeOrden" name="TipoDeOrden" class="form-control" required>
+                                        <option value="">Seleccione</option>
+                                        <option value="Correctiva">Correctiva</option>
+                                        <option value="Preventiva">Preventiva</option>
+                                        <option value="Inspeccion">Inspección</option>
+                                        <option value="Repotenciacion">Repotenciacion</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Fecha a Realizar:</label>
+                                    <input type="date" name="FechaARealizar" class="form-control" placeholder="" value="" />
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label class="required">Problema Relacionado:</label>
-                                <textarea name="ProblemaRelacionado" class="form-control" id="pqrsIdInput" placeholder="" readonly>@ViewBag.descripcionAfectacion</textarea>
-                            </div>
-                            <div class="form-group">
-                                <label class="required">Orden Prioridad:</label>
-                                <select id="OrdenPrioridad" name="OrdenPrioridad" class="form-control" required>
-                                    <option value="">Seleccione</option>
-                                    <option value="Baja">Baja</option>
-                                    <option value="Media">Media</option>
-                                    <option value="Alta">Alta</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="required">Obra Relacionada:</label>
-                                <select id="ObraRelacionada" name="ObraRelacionada" class="form-control" required>
-                                    <option value="">Seleccione</option>
-                                    <option value="No Relacionada">No Relacionada</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="required">Fecha a Realizar:</label>
-                                <input type="date" name="FechaARealizar" class="form-control" placeholder="" value="" required />
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="required">Problema Valido:</label>
+                                    <select id="ProblemaValidado" name="ProblemaValidado" class="form-control" required>
+                                        <option value="Si">Si</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Prioridad De Ruta:</label>
+                                    <input type="number" name="PrioridadDeRuta" class="form-control" placeholder="" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Tipo De Solucion:</label>
+                                    <select id="TipoDeSolucion" name="TipoDeSolucion" class="form-control" required>
+                                        <option value="Sin Recomendacion">Sin Recomendacion</option>
+                                        <option value="Regular">Regular</option>
+                                        <option value="Intercambio">intercambio</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Cuadrilla:</label>
+                                    <select id="Cuadrilla" name="Cuadrilla" class="form-control" required>
+                                        @foreach (var cuadrilla in Model)
+                                        {
+                                            <option value="@cuadrilla.Nombre">@cuadrilla.Nombre</option>
+                                        }
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="required">Problema Valido:</label>
-                                <select id="ProblemaValidado" name="ProblemaValidado" class="form-control" required>
-                                    <option value="Si">Si</option>
-                                    <option value="No">No</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Prioridad De Ruta:</label>
-                                <input type="number" name="PrioridadDeRuta" class="form-control" placeholder="" value="" />
-                            </div>
-                            <div class="form-group">
-                                <label class="required">Tipo De Solucion:</label>
-                                <select id="TipoDeSolucion" name="TipoDeSolucion" class="form-control" required>
-                                    <option value="Sin Recomendacion">Sin Recomendacion</option>
-                                    <option value="Regular">Regular</option>
-                                    <option value="Intercambio">intercambio</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="required">Cuadrilla:</label>
-                                <select id="Cuadrilla" name="Cuadrilla" class="form-control" required>
-                                    @foreach (var cuadrilla in Model)
-                                    {
-                                        <option value="@cuadrilla.Nombre">@cuadrilla.Nombre</option>
-                                    }
-                                </select>
-                            </div>
-                        </div>
+                        <button type="submit" class="btnSubmit">Generar Nueva Orden</button>
                     </div>
-                    <button type="submit" class="btnSubmit">Generar Nueva Orden</button>
                 </div>
             </div>
         </form>
     </div>
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"></script>
 </body>
 </html>
+

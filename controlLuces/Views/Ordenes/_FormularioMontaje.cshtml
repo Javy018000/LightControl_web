@@ -1,11 +1,11 @@
-﻿@{
+﻿﻿@{
     Layout = null;
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="~/Content/css/orden.css" rel="stylesheet" />
@@ -50,7 +50,7 @@
 
             .form-group .required::after {
                 content: '*';
-                color: #FF4500; 
+                color: #FF4500;
                 margin-left: 5px;
             }
 
@@ -195,8 +195,8 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="required">Fecha a Realizar:</label>
-                                <input type="date" name="FechaARealizar" class="form-control" placeholder="" value="" required />
+                                <label>Fecha a Realizar:</label>
+                                <input type="date" name="FechaARealizar" class="form-control" placeholder="" value="" />
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -216,7 +216,7 @@
                                 <select id="TipoDeSolucion" name="TipoDeSolucion" class="form-control" required>
                                     <option value="Sin Recomendacion">Sin Recomendacion</option>
                                     <option value="Regular">Regular</option>
-                                    <option value="Intercambio">intercambio</option>
+                                    <option value="Intercambio">Intercambio</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -230,12 +230,15 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Generar Nueva Orden</button>
+                    <!-- Aquí se ajusta el botón para usar la clase btnSubmit -->
+                    <button type="submit" class="btnSubmit">Generar Nueva Orden</button>
+                    <div id="mensaje"></div>
                 </div>
             </div>
         </form>
+
+
     </div>
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"></script>
 </body>
 </html>
+
