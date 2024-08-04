@@ -60,6 +60,9 @@
     <Reference Include="DocumentFormat.OpenXml, Version=2.16.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.16.0\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
+    <Reference Include="EPPlus, Version=4.5.3.3, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.5.3.3\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
     <Reference Include="ExcelNumberFormat, Version=1.1.0.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelNumberFormat.1.1.0\lib\net20\ExcelNumberFormat.dll</HintPath>
     </Reference>
@@ -109,6 +112,7 @@
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
       <HintPath>..\packages\SixLabors.Fonts.1.0.0\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
     </Reference>

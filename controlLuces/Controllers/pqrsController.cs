@@ -14,6 +14,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using OfficeOpenXml;
 
 namespace controlLuces.Controllers
 {
@@ -687,8 +688,150 @@ namespace controlLuces.Controllers
 
             }
 
-
             return View(pqrs);
+        }
+        public ActionResult ExportarPqrsCompleto()
+        {
+            // Crear una lista para almacenar todos los registros completos de PQRS
+            List<PqrsModel> pqrsList = new List<PqrsModel>();
+
+            try
+            {
+                // Establecer la conexión con la base de datos
+                connectionString();
+                con.Open();
+                com.Connection = con;
+
+                // Consultar toda la información de las PQRS
+                com.CommandText = @"
+            SELECT pqrs.*, Estado.Nombre AS EstadoNombre, pqrs.Imagen AS Imagen 
+            FROM pqrs 
+            INNER JOIN Estado ON pqrs.Estado = Estado.IdEstado";
+
+                SqlDataReader dr = com.ExecuteReader();
+
+                // Recorrer los resultados y llenar la lista
+                while (dr.Read())
+                {
+                    PqrsModel pqrs = new PqrsModel
+                    {
+                        Idpqrs = Convert.ToInt32(dr["Idpqrs"]),
+                        FechaRegistro = dr["FechaRegistro"].ToString(),
+                        Tipopqrs = dr["Tipopqrs"].ToString(),
+                        Canal = dr["Canal"].ToString(),
+                        Nombre = dr["Nombre"].ToString(),
+                        Apellido = dr["Apellido"].ToString(),
+                        TipoDoc = dr["TipoDoc"].ToString(),
+                        Documento = dr["Documento"].ToString(),
+                        BarrioUsuario = dr["BarrioUsuario"].ToString(),
+                        Telefono = dr["Telefono"].ToString(),
+                        DireccionUsuario = dr["DireccionUsuario"].ToString(),
+                        Correo = dr["Correo"].ToString(),
+                        Referencia = dr["Referencia"].ToString(),
+                        DireccionAfectacion = dr["DireccionAfectacion"].ToString(),
+                        BarrioAfectacion = dr["BarrioAfectacion"].ToString(),
+                        TipoAlumbrado = dr["TipoAlumbrado"].ToString(),
+                        DescripcionAfectacion = dr["DescripcionAfectacion"].ToString(),
+                        Estado = Convert.ToInt32(dr["Estado"]),
+                        EstadoNombre = dr["EstadoNombre"].ToString(),
+                        img = dr["Imagen"] as byte[]
+                    };
+
+                    pqrsList.Add(pqrs);
+                }
+
+                dr.Close();
+                con.Close();
+            }
+            catch (Exception ex)
+            {
+                // Manejo de excepciones
+                Console.WriteLine(ex.Message);
+                if (con.State == System.Data.ConnectionState.Open)
+                    con.Close();
+            }
+
+            // Retornar la lista como archivo Excel
+            return new ExcelResult(pqrsList);
+        }
+        public class ExcelResult : ActionResult
+        {
+            private List<PqrsModel> _pqrsList;
+
+            public ExcelResult(List<PqrsModel> pqrsList)
+            {
+                _pqrsList = pqrsList;
+            }
+
+            public override void ExecuteResult(ControllerContext context)
+            {
+                using (var package = new ExcelPackage())
+                {
+                    var worksheet = package.Workbook.Worksheets.Add("PQRS");
+
+                    // Encabezados de las columnas
+                    worksheet.Cells[1, 1].Value = "Consecutivo";
+                    worksheet.Cells[1, 2].Value = "Fecha";
+                    worksheet.Cells[1, 3].Value = "Tipo";
+                    worksheet.Cells[1, 4].Value = "Canal";
+                    worksheet.Cells[1, 5].Value = "Nombre";
+                    worksheet.Cells[1, 6].Value = "Apellido";
+                    worksheet.Cells[1, 7].Value = "TipoDoc";
+                    worksheet.Cells[1, 8].Value = "Documento";
+                    worksheet.Cells[1, 9].Value = "Barrio Usuario";
+                    worksheet.Cells[1, 10].Value = "Teléfono";
+                    worksheet.Cells[1, 11].Value = "Dirección Usuario";
+                    worksheet.Cells[1, 12].Value = "Correo";
+                    worksheet.Cells[1, 13].Value = "Referencia";
+                    worksheet.Cells[1, 14].Value = "Dirección Afectación";
+                    worksheet.Cells[1, 15].Value = "Barrio Afectación";
+                    worksheet.Cells[1, 16].Value = "Tipo Alumbrado";
+                    worksheet.Cells[1, 17].Value = "Descripción Afectación";
+                    worksheet.Cells[1, 18].Value = "Estado";
+                    worksheet.Cells[1, 19].Value = "Estado Nombre";
+                    worksheet.Cells[1, 20].Value = "Imagen";
+
+                    // Llenar la hoja con los datos
+                    for (int i = 0; i < _pqrsList.Count; i++)
+                    {
+                        var pqrs = _pqrsList[i];
+                        worksheet.Cells[i + 2, 1].Value = pqrs.Idpqrs;
+                        worksheet.Cells[i + 2, 2].Value = pqrs.FechaRegistro;
+                        worksheet.Cells[i + 2, 3].Value = pqrs.Tipopqrs;
+                        worksheet.Cells[i + 2, 4].Value = pqrs.Canal;
+                        worksheet.Cells[i + 2, 5].Value = pqrs.Nombre;
+                        worksheet.Cells[i + 2, 6].Value = pqrs.Apellido;
+                        worksheet.Cells[i + 2, 7].Value = pqrs.TipoDoc;
+                        worksheet.Cells[i + 2, 8].Value = pqrs.Documento;
+                        worksheet.Cells[i + 2, 9].Value = pqrs.BarrioUsuario;
+                        worksheet.Cells[i + 2, 10].Value = pqrs.Telefono;
+                        worksheet.Cells[i + 2, 11].Value = pqrs.DireccionUsuario;
+                        worksheet.Cells[i + 2, 12].Value = pqrs.Correo;
+                        worksheet.Cells[i + 2, 13].Value = pqrs.Referencia;
+                        worksheet.Cells[i + 2, 14].Value = pqrs.DireccionAfectacion;
+                        worksheet.Cells[i + 2, 15].Value = pqrs.BarrioAfectacion;
+                        worksheet.Cells[i + 2, 16].Value = pqrs.TipoAlumbrado;
+                        worksheet.Cells[i + 2, 17].Value = pqrs.DescripcionAfectacion;
+                        worksheet.Cells[i + 2, 18].Value = pqrs.Estado;
+                        worksheet.Cells[i + 2, 19].Value = pqrs.EstadoNombre;
+
+                        // Convertir la imagen a base64 y añadirla
+                        if (pqrs.img != null)
+                        {
+                            var base64Image = Convert.ToBase64String(pqrs.img);
+                            worksheet.Cells[i + 2, 20].Value = $"data:image/jpeg;base64,{base64Image}";
+                        }
+                    }
+
+                    // Configurar el tipo de contenido para la respuesta HTTP
+                    var response = context.HttpContext.Response;
+                    response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    response.AddHeader("content-disposition", $"attachment;  filename=archivo_pqrs_completo.xlsx");
+
+                    // Escribir el contenido del archivo al stream de respuesta
+                    response.BinaryWrite(package.GetAsByteArray());
+                }
+            }
         }
 
         public ActionResult GraficoTipoPqrs()
@@ -758,19 +901,6 @@ namespace controlLuces.Controllers
         {
             // Obtener los datos de PQRS desde el modelo
             List<PqrsModel> pqrsList = ObtenerPqrs();
-
-            // Contar el número de PQRS por mes
-            //var pqrsPorMes = pqrsList.GroupBy(p => new { Mes = p.FechaRegistro.Month, Anio = p.FechaRegistro.Year })
-            //.Select(g => new { Mes = $"{g.Key.Mes}-{g.Key.Anio}", Count = g.Count() })
-            //   .ToList();
-
-            // Convertir los datos en un formato adecuado para el gráfico de barras
-            //var labels = pqrsPorMes.Select(x => x.Mes).ToArray();
-            //var data = pqrsPorMes.Select(x => x.Count).ToArray();
-
-            // Pasar los datos al modelo de vista
-            //  ViewBag.PqrsPorMesLabels = labels;
-            // ViewBag.PqrsPorMesData = data;
 
             return View("GraficoPqrs");
         }
