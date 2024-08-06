@@ -26,7 +26,6 @@
             align-items: center;
         }
 
-
         .container-body-content {
             background-color: white;
             padding: 40px;
@@ -61,6 +60,7 @@
             font-family: 'Product Sans', sans-serif;
             display: inline-block;
             padding: 7px 13px;
+            margin: 5px;
         }
 
         .btn-primary {
@@ -83,6 +83,17 @@
             .btn-danger:hover {
                 background-color: #bd2130;
                 border-color: #bd2130;
+            }
+
+        .btn-export {
+            background-color: #28a745;
+            color: #fff;
+            border-color: #28a745;
+        }
+
+            .btn-export:hover {
+                background-color: #218838;
+                border-color: #1e7e34;
             }
 
         .table {
@@ -164,13 +175,25 @@
             </form>
         </div>
         <div class="table-responsive">
-            <table class="table">
+            <table class="table" id="ordersTable">
                 <thead>
                     <tr>
                         <th>Consecutivo</th>
-                        <th>Codigo Del Elemento</th>
-                        <th>Tipo</th>
-                        <th>Problema</th>
+                        <th>Código del Elemento</th>
+                        <th>Tipo de Elemento</th>
+                        <th>Elemento Relacionado</th>
+                        <th>Problema Relacionado</th>
+                        <th>Problema Validado</th>
+                        <th>Orden Prioridad</th>
+                        <th>Prioridad de Ruta</th>
+                        <th>Fecha a Realizar</th>
+                        <th>Cuadrilla</th>
+                        <th>Tipo de Orden</th>
+                        <th>Tipo de Solución</th>
+                        <th>Clase de Orden</th>
+                        <th>Obra Relacionada</th>
+                        <th>Estado Nombre</th>
+                        <th>Descripción</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -182,11 +205,24 @@
                             <tr>
                                 <td>@ordenes.IdOrden</td>
                                 <td>@ordenes.CodigoDeElemento</td>
-                                <td>@ordenes.TipoDeOrden</td>
+                                <td>@ordenes.TipoDeElemento</td>
+                                <td>@ordenes.ElementoRelacionado</td>
                                 <td>@ordenes.ProblemaRelacionado</td>
+                                <td>@ordenes.ProblemaValidado</td>
+                                <td>@ordenes.OrdenPrioridad</td>
+                                <td>@ordenes.PrioridadDeRuta</td>
+                                <td>@ordenes.FechaARealizar?.ToString("dd/MM/yyyy")</td>
+                                <td>@ordenes.Cuadrilla</td>
+                                <td>@ordenes.TipoDeOrden</td>
+                                <td>@ordenes.TipoDeSolucion</td>
+                                <td>@ordenes.ClaseDeOrden</td>
+                                <td>@ordenes.ObraRelacionada</td>
+                                <td>@ordenes.EstadoNombre</td>
+                                <td>@ordenes.Descripcion</td>
                                 <td>
-                                    <a href="@Url.Action("verinfo", "Ordenes", new { id = ordenes.IdOrden })" class="btn btn-primary btn-sm">Ver info</a>
-                                    <a href="@Url.Action("eliminarOrden", "Ordenes", new { id = ordenes.IdOrden, idpqrs = ordenes.ElementoRelacionado })" class="btn btn-danger btn-sm">Eliminar</a>
+                                    <a href="@Url.Action("VerInfo", "Ordenes", new { id = ordenes.IdOrden })" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye"></i> Ver Info
+                                    </a>
                                 </td>
                             </tr>
                         }
@@ -194,31 +230,78 @@
                     else
                     {
                         <tr>
-                            <td colspan="5">No se encontraron registros.</td>
+                            <td colspan="20">No se encontraron órdenes de servicio.</td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
-        <div class="text-center">
-            <a href="@Url.Action("verOrdenes", "Ordenes")" class="btn btn-primary mb-3"><i class="fas fa-list mr-2"></i>Ver todas las Ordenes De servicio</a>
-            <a href="@Url.Action("inicio", "login")" class="btn btn-danger mb-3"><i class="fas fa-arrow-left mr-2"></i>Atrás</a>
+
+        <!-- Botones para volver y ver todas las PQRS -->
+        <div class="d-flex justify-content-between mt-3">
+            <a href="@Url.Action("verOrdenes", "Ordenes")" class="btn btn-primary">
+                <i class="fas fa-list"></i> Ver Todas las Ordenes De Servicio
+            </a>
+            <a href="@Url.Action("inicio", "login")" class="btn btn-danger">
+                <i class="fas fa-arrow-left"></i> Atrás
+            </a>
         </div>
+
+        <button class="btn btn-export mt-3" onclick="exportToExcel()">Exportar a Excel <i class="fas fa-file-excel ml-2"></i></button>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script>
         $(document).ready(function () {
             $("#tipoBusqueda").change(function () {
-                if ($(this).val() == "fecha") {
+                var selectedValue = $(this).val();
+                if (selectedValue === "fecha") {
                     $("#rangoFecha").show();
                     $("#campoConsecutivo").hide();
-                } else if ($(this).val() == "consecutivo") {
+                } else if (selectedValue === "consecutivo") {
                     $("#rangoFecha").hide();
                     $("#campoConsecutivo").show();
+                } else {
+                    $("#rangoFecha").hide();
+                    $("#campoConsecutivo").hide();
                 }
             });
         });
+
+        function exportToExcel() {
+            // Creamos una nueva tabla para exportar a Excel, incluyendo todas las columnas necesarias.
+            var workbook = XLSX.utils.book_new();
+            var worksheet_data = [
+                // Agregar encabezados
+                [
+                    "Consecutivo", "Código del Elemento", "Tipo de Elemento", "Elemento Relacionado",
+                    "Problema Relacionado", "Problema Validado", "Orden Prioridad", "Prioridad de Ruta",
+                    "Fecha a Realizar", "Cuadrilla", "Tipo de Orden", "Tipo de Solución", "Clase de Orden",
+                    "Obra Relacionada", "Estado Nombre", "Descripción"
+                ]
+            ];
+
+            // Iterar sobre las filas de la tabla para obtener los datos
+            var rows = document.querySelectorAll("#ordersTable tbody tr");
+            rows.forEach(row => {
+                var cells = row.querySelectorAll("td:not(:last-child)"); // Excluimos la última columna (Acciones)
+                var row_data = [];
+                cells.forEach(cell => {
+                    row_data.push(cell.innerText);
+                });
+                worksheet_data.push(row_data);
+            });
+
+            // Crear la hoja de cálculo
+            var worksheet = XLSX.utils.aoa_to_sheet(worksheet_data);
+
+            // Agregar la hoja al libro
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Órdenes de Servicio");
+
+            // Descargar el archivo
+            XLSX.writeFile(workbook, "ordenes_de_servicio.xlsx");
+        }
     </script>
 </body>
 </html>

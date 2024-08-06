@@ -31,6 +31,8 @@ namespace controlLuces.Models
         public int Estado { get; set; }
         public string EstadoNombre { get; set; }
         public string ImagenDataUrl { get; set; }
+        public string DatosRelacionados { get; set; }
+
     }
 }
 

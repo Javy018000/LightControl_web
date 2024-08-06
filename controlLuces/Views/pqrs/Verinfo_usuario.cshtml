@@ -193,16 +193,21 @@
                                 <label>Descripción Afectación:</label>
                                 <input type="text" name="DescripcionAfectacion" class="form-control" value="@Model.DescripcionAfectacion" readonly />
                             </div>
-                            <div class="form-group">
-                                <label>Estado:</label>
-                                <input type="text" name="EstadoNombre" class="form-control" value="@Model.EstadoNombre" readonly />
-                            </div>
-                            <div class="form-group img-container">
-                                <label>Recursos:</label>
-                                <img src="@ViewBag.ImagenDataUrl" alt="Recursos">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Datos Relacionados:</label>
+                                    <input type="text" name="DatosRelacionados" class="form-control" value="@Model.DatosRelacionados" readonly />
+                                </div>
+                                <div class="form-group">
+                                    <label>Estado:</label>
+                                    <input type="text" name="EstadoNombre" class="form-control" value="@Model.EstadoNombre" readonly />
+                                </div>
+                                <div class="form-group img-container">
+                                    <label>Recursos:</label>
+                                    <img src="@ViewBag.ImagenDataUrl" alt="Recursos">
+                                </div>
                             </div>
                         </div>
-                    </div>
                 </div>
 
                 <div class="button-container text-center">

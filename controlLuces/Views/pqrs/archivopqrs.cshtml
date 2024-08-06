@@ -1,8 +1,4 @@
-﻿@{
-    ViewBag.Title = "Archivo PQRS";
-}
-
-@model List<controlLuces.Models.PqrsModel>
+﻿@model List<controlLuces.Models.PqrsModel>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -10,11 +6,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap" rel="stylesheet">
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
         body {
             background: linear-gradient(to bottom, #87CEEB, #007bff) no-repeat;
             background-size: cover;
@@ -23,20 +23,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0;
-            padding: 0;
+            flex-direction: column;
         }
 
         .container-body-content {
             background-color: white;
-            padding: 5%;
+            padding: 40px;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-            max-width: 100%;
-            width: 90%;
+            width: 100%;
+            max-width: 900px;
+            max-height: 80vh;
+            overflow-y: auto;
             margin: auto;
             transition: background-color 0.3s ease;
-            overflow: hidden;
         }
 
         .card-body {
@@ -45,7 +45,7 @@
 
         .forms {
             background-color: rgba(255, 255, 255, 0.8);
-            padding: 40px;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
             margin-bottom: 20px;
@@ -57,7 +57,13 @@
             }
 
         .btn {
-            font-family: Arial, sans-serif;
+            font-family: 'Product Sans', sans-serif;
+            display: inline-block;
+            padding: 7px 13px;
+            margin: 5px; /* Añadido para espaciado entre botones */
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         .btn-primary {
@@ -69,6 +75,8 @@
             .btn-primary:hover {
                 background-color: #0056b3;
                 border-color: #0056b3;
+                color: #fff; /* Mantiene el texto blanco */
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Efecto de resplandor */
             }
 
         .btn-danger {
@@ -78,8 +86,10 @@
         }
 
             .btn-danger:hover {
-                background-color: #bd2130;
+                background-color: #c82333;
                 border-color: #bd2130;
+                color: #fff; /* Mantiene el texto blanco */
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Efecto de resplandor */
             }
 
         .btn-success {
@@ -91,19 +101,36 @@
             .btn-success:hover {
                 background-color: #218838;
                 border-color: #218838;
+                color: #fff; /* Mantiene el texto blanco */
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Efecto de resplandor */
             }
 
         .btn-excel {
-            background-color: #217346; /* Color de fondo característico de Excel */
-            border-color: #217346; /* Borde del mismo color */
-            color: #fff; /* Color del texto */
-            margin-left: 5px; /* Espacio a la izquierda */
-            transition: background-color 0.3s ease;
+            background-color: #217346;
+            border-color: #217346;
+            color: #fff;
+            margin-top: 10px;
         }
 
             .btn-excel:hover {
-                background-color: #1a5a34; /* Cambio de color al pasar el mouse */
-                border-color: #1a5a34; /* Borde del mismo color */
+                background-color: #1a5a34;
+                border-color: #1a5a34;
+                color: #fff; /* Mantiene el texto blanco */
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Efecto de resplandor */
+            }
+
+        .btn-back {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: #fff;
+            margin-top: 10px;
+        }
+
+            .btn-back:hover {
+                background-color: #c82333;
+                border-color: #bd2130;
+                color: #fff; /* Mantiene el texto blanco */
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Efecto de resplandor */
             }
 
         .table {
@@ -128,37 +155,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 1.5rem;
         }
 
         .table-responsive {
-            overflow-x: auto; /* Desplazamiento horizontal en pantallas pequeñas */
+            overflow-x: auto;
         }
 
-        .export-buttons {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
         }
-
-            .export-buttons button {
-                background-color: #4CAF50;
-                color: white;
-                border: none;
-                padding: 15px 30px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 16px;
-                margin: 4px 2px;
-                cursor: pointer;
-                border-radius: 12px;
-                transition: background-color 0.3s;
-            }
-
-                .export-buttons button:hover {
-                    background-color: #45a049;
-                }
     </style>
 </head>
 <body>
@@ -168,7 +175,7 @@
             <form method="post" action="@Url.Action("BuscarPqrs", "pqrs")" class="forms">
                 <div class="input-group mb-3">
                     <select id="tipoBusqueda" name="tipoBusqueda" class="form-control">
-                        <option>Seleccionar</option>
+                        <option value="">Seleccionar</option>
                         <option value="consecutivo">Por Consecutivo</option>
                         <option value="fecha">Por Fecha</option>
                     </select>
@@ -200,17 +207,27 @@
                 </div>
             </form>
         </div>
+
         <div class="table-responsive">
-            <table class="table" id="pqrsTable">
+            <table class="table">
                 <thead>
                     <tr>
-                        <th>Seleccionar</th>
                         <th>Consecutivo</th>
                         <th>Fecha</th>
                         <th>Tipo</th>
                         <th>Canal</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Tipo Doc</th>
+                        <th>Documento</th>
+                        <th>Teléfono</th>
+                        <th>Correo</th>
+                        <th>Referencia</th>
                         <th>Dirección</th>
+                        <th>Barrio</th>
+                        <th>Tipo Alumbrado</th>
                         <th>Descripción</th>
+                        <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -220,15 +237,25 @@
                         foreach (var pqrs in Model)
                         {
                             <tr>
-                                <td><input type="checkbox" class="pqrs-checkbox" value="@pqrs.Idpqrs" /></td>
-                                <td>@pqrs.Idpqrs</td>
+                                <td>@pqrs.Consecutivo</td>
                                 <td>@pqrs.FechaRegistro</td>
                                 <td>@pqrs.Tipopqrs</td>
                                 <td>@pqrs.Canal</td>
-                                <td>@pqrs.DireccionAfectacion</td>
+                                <td>@pqrs.Nombre</td>
+                                <td>@pqrs.Apellido</td>
+                                <td>@pqrs.TipoDoc</td>
+                                <td>@pqrs.Documento</td>
+                                <td>@pqrs.Telefono</td>
+                                <td>@pqrs.Correo</td>
+                                <td>@pqrs.Referencia</td>
+                                <td>@pqrs.DireccionUsuario</td>
+                                <td>@pqrs.BarrioUsuario</td>
+                                <td>@pqrs.TipoAlumbrado</td>
                                 <td>@pqrs.DescripcionAfectacion</td>
+                                <td>@pqrs.EstadoNombre</td>
                                 <td>
-                                    <a href="@Url.Action("VerInfo", "pqrs", new { id = pqrs.Idpqrs })" class="btn btn-primary btn-sm"><i class="fas fa-eye mr-2"></i>Ver Info</a>
+                                    <!-- Agregar botones o enlaces para acciones -->
+                                    <a href="@Url.Action("Detalles", new { id = pqrs.Idpqrs })" class="btn btn-info"><i class="fas fa-info-circle"></i> Ver</a>
                                 </td>
                             </tr>
                         }
@@ -236,56 +263,52 @@
                     else
                     {
                         <tr>
-                            <td colspan="8">No se encontraron registros.</td>
+                            <td colspan="16" class="text-center">No hay datos disponibles.</td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
-        <div class="text-center export-buttons">
-            <form action="@Url.Action("ExportarPqrsCompleto", "Pqrs")" method="get">
-                <button type="submit" class="btn btn-excel">
-                    <i class="fas fa-file-export mr-2"></i>Exportar Todo a Excel
-                </button>
-            </form>
-            <button id="exportSelected" class="btn btn-success">
-                <i class="fas fa-file-export mr-2"></i>Exportar Seleccionados a Excel
-            </button>
-            <a href="javascript:history.back()" class="btn btn-danger">
-                <i class="fas fa-arrow-left mr-2"></i>Atrás
-            </a>
+
+        <div class="button-container">
+            <button class="btn btn-excel"><i class="fas fa-file-excel mr-2"></i> Exportar a Excel</button>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-back"><i class="fas fa-arrow-left mr-2"></i> Atrás</a>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $('#tipoBusqueda').change(function () {
-                var tipo = $(this).val();
-                $('#rangoFecha, #campoConsecutivo').hide();
-                if (tipo === 'consecutivo') {
-                    $('#campoConsecutivo').show();
-                } else if (tipo === 'fecha') {
-                    $('#rangoFecha').show();
+        document.addEventListener('DOMContentLoaded', function () {
+            // Maneja el cambio en el tipo de búsqueda
+            var tipoBusqueda = document.getElementById('tipoBusqueda');
+            var rangoFecha = document.getElementById('rangoFecha');
+            var campoConsecutivo = document.getElementById('campoConsecutivo');
+
+            tipoBusqueda.addEventListener('change', function () {
+                if (this.value === 'fecha') {
+                    rangoFecha.style.display = 'block';
+                    campoConsecutivo.style.display = 'none';
+                } else if (this.value === 'consecutivo') {
+                    rangoFecha.style.display = 'none';
+                    campoConsecutivo.style.display = 'block';
+                } else {
+                    rangoFecha.style.display = 'none';
+                    campoConsecutivo.style.display = 'none';
                 }
             });
 
-            $('#exportSelected').click(function () {
-                var selectedIds = $('.pqrs-checkbox:checked').map(function () {
-                    return $(this).val();
-                }).get();
+            // Maneja la exportación a Excel
+            document.querySelector('.btn-excel').addEventListener('click', function (e) {
+                e.preventDefault(); // Evita el comportamiento predeterminado del enlace
 
-                if (selectedIds.length > 0) {
-                    var url = '@Url.Action("ExportarSeleccionados", "Pqrs")';
-                    $('<form>', {
-                        "html": '<input type="hidden" name="ids" value="' + selectedIds.join(',') + '" />',
-                        "action": url,
-                        "method": 'post'
-                    }).appendTo(document.body).submit();
-                } else {
-                    alert('Por favor, seleccione al menos un elemento para exportar.');
-                }
+                var wb = XLSX.utils.book_new(); // Crea un nuevo libro de Excel
+                var ws = XLSX.utils.table_to_sheet(document.querySelector('.table')); // Convierte la tabla en una hoja
+
+                // Agrega la hoja al libro
+                XLSX.utils.book_append_sheet(wb, ws, 'PQRS');
+
+                // Escribe el archivo Excel y descarga
+                XLSX.writeFile(wb, 'PQRS.xlsx');
             });
         });
     </script>

@@ -244,13 +244,13 @@ namespace controlLuces.Controllers
 
         }
 
-        public ActionResult inicio(PqrsModel pqrs)
+        public ActionResult inicio(PqrsModel pqrs, OrdenModel ordenes_de_servicio)
         {
-
-
             int cantidadPqrsEstado1 = 0;
             int cantidadPqrsEstado2 = 0;
             int cantidadPqrsEstado3 = 0;
+            int cantidadOrdenesEstado2 = 0;
+
 
             connectionString();
             con.Open();
@@ -268,16 +268,20 @@ namespace controlLuces.Controllers
             com.CommandText = "SELECT COUNT(*) FROM pqrs WHERE Estado = 3";
             cantidadPqrsEstado3 = (int)com.ExecuteScalar();
 
-            // Consultar la cantidad de PQRS con estado "Sin Asignar"
+            // Consultar la cantidad de órdenes con estado 2
+            com.CommandText = "SELECT COUNT(*) FROM ordenes_de_servicio WHERE IdEstado = 2";
+            cantidadOrdenesEstado2 = (int)com.ExecuteScalar();
+
 
 
             con.Close();
 
-            // Pasar las cantidades de PQRS a la vista
-
+            // Pasar las cantidades de PQRS y órdenes a la vista
             ViewBag.CantidadPqrsEstado1 = cantidadPqrsEstado1;
             ViewBag.CantidadPqrsEstado2 = cantidadPqrsEstado2;
             ViewBag.CantidadPqrsEstado3 = cantidadPqrsEstado3;
+            ViewBag.CantidadOrdenesEstado2 = cantidadOrdenesEstado2;
+
 
             return View();
         }

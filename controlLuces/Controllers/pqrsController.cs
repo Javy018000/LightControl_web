@@ -15,6 +15,8 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using OfficeOpenXml;
+using System.Web.UI;
+using ClosedXML.Excel;
 
 namespace controlLuces.Controllers
 {
@@ -29,7 +31,7 @@ namespace controlLuces.Controllers
         {
             //con.ConnectionString = "data source =luminarias.mssql.somee.com ;initial catalog=luminarias;user id=JonathanFLF_SQLLogin_1;pwd=zgya9wozpl";
             //con.ConnectionString = "data source =DESKTOP-CREDOOS\\SQLEXPRESS ;DataBase=luminarias; integrated security=SSPI";
-            //con.ConnectionString = "data source =JONATHAN-PC\\SQLEXPRESS ;DataBase=luminarias; integrated security=SSPI";
+           
             //con.ConnectionString = "data source =LAPTOP-VHK1MAKD\\CONEXION ;DataBase=luminarias; integrated security=SSPI";
             con.ConnectionString = "data source=tadeo.colombiahosting.com.co\\MSSQLSERVER2019;initial catalog=lightcon_luminaria;user id=lightcon_lumin;pwd=luminaria2024*";
             //con.ConnectionString = "data source = luminaria.mssql.somee.com; initial catalog = luminaria; user id = hhjhhshsgsg_SQLLogin_2; pwd = cdrf7hhrrl";
@@ -74,6 +76,7 @@ namespace controlLuces.Controllers
                 return RedirectToAction("MostrarPqrs");
             }
         }
+        //cambios  accion
 
         [HttpPost]
         public ActionResult Enviarpqrs(PqrsModel pqrs, HttpPostedFileBase imagen)
@@ -106,9 +109,9 @@ namespace controlLuces.Controllers
                 con.Open();
                 com.Connection = con;
 
-                com.CommandText = @"INSERT INTO pqrs (FechaRegistro, Tipopqrs, Canal, Nombre, Apellido, TipoDoc, Documento, Telefono, Correo, Referencia, DireccionAfectacion, BarrioAfectacion, TipoAlumbrado, DescripcionAfectacion, Imagen, Estado) 
-                    VALUES (@FechaRegistro, @Tipopqrs, @Canal, @Nombre, @Apellido, @TipoDoc, @Documento, @Telefono, @Correo, @Referencia, @DireccionAfectacion, @BarrioAfectacion, @TipoAlumbrado, @DescripcionAfectacion, @Imagen, @Estado);
-                    SELECT SCOPE_IDENTITY();";
+                com.CommandText = @"INSERT INTO pqrs (FechaRegistro, Tipopqrs, Canal, Nombre, Apellido, TipoDoc, Documento, Telefono, Correo, Referencia, DireccionAfectacion, BarrioAfectacion, TipoAlumbrado, DescripcionAfectacion, Imagen, Estado, DatosRelacionados) 
+            VALUES (@FechaRegistro, @Tipopqrs, @Canal, @Nombre, @Apellido, @TipoDoc, @Documento, @Telefono, @Correo, @Referencia, @DireccionAfectacion, @BarrioAfectacion, @TipoAlumbrado, @DescripcionAfectacion, @Imagen, @Estado, @DatosRelacionados);
+            SELECT SCOPE_IDENTITY();";
 
                 // Agregar parámetro para FechaRegistro
                 com.Parameters.AddWithValue("@FechaRegistro", fechaRegistro);
@@ -129,6 +132,9 @@ namespace controlLuces.Controllers
                 com.Parameters.AddWithValue("@DescripcionAfectacion", pqrs.DescripcionAfectacion ?? (object)DBNull.Value);
                 com.Parameters.AddWithValue("@Imagen", data);
                 com.Parameters.AddWithValue("@Estado", 1);
+
+                // Agregar parámetro para DatosRelacionados
+                com.Parameters.AddWithValue("@DatosRelacionados", pqrs.DatosRelacionados ?? (object)DBNull.Value);
 
                 int id = Convert.ToInt32(com.ExecuteScalar());
 
@@ -152,12 +158,16 @@ namespace controlLuces.Controllers
 
 
 
+
         public ActionResult MostrarPqrs()
         {
             connectionString();
             con.Open();
             com.Connection = con;
-            com.CommandText = "SELECT pqrs.*, Estado.Nombre AS EstadoNombre FROM pqrs INNER JOIN Estado ON pqrs.Estado = Estado.IdEstado WHERE pqrs.Estado IN (1) ";
+            com.CommandText = @"SELECT pqrs.*, Estado.Nombre AS EstadoNombre 
+                        FROM pqrs 
+                        INNER JOIN Estado ON pqrs.Estado = Estado.IdEstado 
+                        WHERE pqrs.Estado IN (1)";
             SqlDataReader dr = com.ExecuteReader();
 
             // Lista para almacenar las pqrs
@@ -181,9 +191,9 @@ namespace controlLuces.Controllers
                 pqrs.Apellido = dr["Apellido"].ToString();
                 pqrs.TipoDoc = dr["TipoDoc"].ToString();
                 pqrs.Documento = dr["Documento"].ToString();
-                pqrs.BarrioUsuario = dr["BarrioUsuario"].ToString();
+                
                 pqrs.Telefono = dr["Telefono"].ToString();
-                pqrs.DireccionUsuario = dr["DireccionUsuario"].ToString();
+            
                 pqrs.Correo = dr["Correo"].ToString();
                 pqrs.Referencia = dr["Referencia"].ToString();
                 pqrs.DireccionAfectacion = dr["DireccionAfectacion"].ToString();
@@ -203,6 +213,12 @@ namespace controlLuces.Controllers
                     pqrs.ImagenDataUrl = "Sin recursos de imagen";
                 }
 
+                // Obtener y asignar el campo DatosRelacionados
+                if (dr["DatosRelacionados"] != DBNull.Value)
+                {
+                    pqrs.DatosRelacionados = dr["DatosRelacionados"].ToString();
+                }
+
                 pqrsList.Add(pqrs);
             }
 
@@ -211,6 +227,7 @@ namespace controlLuces.Controllers
             // Pasar la lista de pqrs a la vista
             return View(pqrsList);
         }
+
 
         public ActionResult pqrssinasignar_usuario()
         {
@@ -279,9 +296,9 @@ namespace controlLuces.Controllers
                 pqrs.Apellido = dr["Apellido"].ToString();
                 pqrs.TipoDoc = dr["TipoDoc"].ToString();
                 pqrs.Documento = dr["Documento"].ToString();
-                pqrs.BarrioUsuario = dr["BarrioUsuario"].ToString();
+              
                 pqrs.Telefono = dr["Telefono"].ToString();
-                pqrs.DireccionUsuario = dr["DireccionUsuario"].ToString();
+               
                 pqrs.Correo = dr["Correo"].ToString();
                 pqrs.Referencia = dr["Referencia"].ToString();
                 pqrs.DireccionAfectacion = dr["DireccionAfectacion"].ToString();
@@ -322,9 +339,9 @@ namespace controlLuces.Controllers
                 pqrs.Apellido = dr["Apellido"].ToString();
                 pqrs.TipoDoc = dr["TipoDoc"].ToString();
                 pqrs.Documento = dr["Documento"].ToString();
-                pqrs.BarrioUsuario = dr["BarrioUsuario"].ToString();
+
                 pqrs.Telefono = dr["Telefono"].ToString();
-                pqrs.DireccionUsuario = dr["DireccionUsuario"].ToString();
+               
                 pqrs.Correo = dr["Correo"].ToString();
                 pqrs.Referencia = dr["Referencia"].ToString();
                 pqrs.DireccionAfectacion = dr["DireccionAfectacion"].ToString();
@@ -384,62 +401,71 @@ namespace controlLuces.Controllers
             return View(pqrsList);
         }
 
-        public ActionResult BuscarPqrs(string tipoBusqueda, string desde, string hasta, string Idpqrs)
+        public ActionResult BuscarPqrs(string tipoBusqueda, string Idpqrs, DateTime? desde, DateTime? hasta)
         {
+            List<PqrsModel> resultados = new List<PqrsModel>();
+
+            // Establecer la conexión con la base de datos
             connectionString();
             con.Open();
             com.Connection = con;
 
-            // Lógica para buscar PQRS según los parámetros recibidos
+            // Construir la consulta según el tipo de búsqueda
             if (tipoBusqueda == "consecutivo")
             {
-                // Si la búsqueda es por consecutivo
                 com.CommandText = "SELECT pqrs.*, Estado.Nombre AS EstadoNombre FROM pqrs INNER JOIN Estado ON pqrs.Estado = Estado.IdEstado WHERE pqrs.Idpqrs = @Idpqrs";
                 com.Parameters.AddWithValue("@Idpqrs", Idpqrs);
             }
-            else if (tipoBusqueda == "fecha")
+            else if (tipoBusqueda == "fecha" && desde.HasValue && hasta.HasValue)
             {
-                // Si la búsqueda es por fecha
                 com.CommandText = "SELECT pqrs.*, Estado.Nombre AS EstadoNombre FROM pqrs INNER JOIN Estado ON pqrs.Estado = Estado.IdEstado WHERE pqrs.FechaRegistro BETWEEN @Desde AND @Hasta";
-                com.Parameters.AddWithValue("@Desde", desde);
-                com.Parameters.AddWithValue("@Hasta", hasta);
+                com.Parameters.AddWithValue("@Desde", desde.Value);
+                com.Parameters.AddWithValue("@Hasta", hasta.Value);
             }
 
-            SqlDataReader dr = com.ExecuteReader();
-
-            // Lista para almacenar los resultados de la búsqueda
-            List<PqrsModel> resultados = new List<PqrsModel>();
-
-            // Leer los datos y añadirlos a la lista de resultados
-            while (dr.Read())
+            try
             {
-                PqrsModel pqrs = new PqrsModel();
-                pqrs.Idpqrs = Convert.ToInt32(dr["Idpqrs"]);
-                pqrs.Consecutivo = "CH2024" + pqrs.Idpqrs.ToString(); // Añadir el prefijo
-                pqrs.FechaRegistro = dr["FechaRegistro"].ToString();
-                pqrs.Tipopqrs = dr["Tipopqrs"].ToString();
-                pqrs.Canal = dr["Canal"].ToString();
-                pqrs.Nombre = dr["Nombre"].ToString();
-                pqrs.Apellido = dr["Apellido"].ToString();
-                pqrs.TipoDoc = dr["TipoDoc"].ToString();
-                pqrs.Documento = dr["Documento"].ToString();
-                pqrs.BarrioUsuario = dr["BarrioUsuario"].ToString();
-                pqrs.Telefono = dr["Telefono"].ToString();
-                pqrs.DireccionUsuario = dr["DireccionUsuario"].ToString();
-                pqrs.Correo = dr["Correo"].ToString();
-                pqrs.Referencia = dr["Referencia"].ToString();
-                pqrs.DireccionAfectacion = dr["DireccionAfectacion"].ToString();
-                pqrs.BarrioAfectacion = dr["BarrioAfectacion"].ToString();
-                pqrs.TipoAlumbrado = dr["TipoAlumbrado"].ToString();
-                pqrs.DescripcionAfectacion = dr["DescripcionAfectacion"].ToString();
-                pqrs.EstadoNombre = dr["EstadoNombre"].ToString();
-                resultados.Add(pqrs);
+                // Ejecutar la consulta y obtener un lector de datos
+                SqlDataReader dr = com.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    PqrsModel pqrs = new PqrsModel
+                    {
+                        Idpqrs = Convert.ToInt32(dr["Idpqrs"]),
+                        FechaRegistro = dr["FechaRegistro"].ToString(),
+                        Tipopqrs = dr["Tipopqrs"].ToString(),
+                        Canal = dr["Canal"].ToString(),
+                        Nombre = dr["Nombre"].ToString(),
+                        Apellido = dr["Apellido"].ToString(),
+                        TipoDoc = dr["TipoDoc"].ToString(),
+                        Documento = dr["Documento"].ToString(),
+                      
+                        Telefono = dr["Telefono"].ToString(),
+                       
+                        Correo = dr["Correo"].ToString(),
+                        Referencia = dr["Referencia"].ToString(),
+                        DireccionAfectacion = dr["DireccionAfectacion"].ToString(),
+                        BarrioAfectacion = dr["BarrioAfectacion"].ToString(),
+                        TipoAlumbrado = dr["TipoAlumbrado"].ToString(),
+                        DescripcionAfectacion = dr["DescripcionAfectacion"].ToString(),
+                        Estado = Convert.ToInt32(dr["Estado"]),
+                        EstadoNombre = dr["EstadoNombre"].ToString()
+                    };
+
+
+                    resultados.Add(pqrs);
+                }
+
+                con.Close();
+            }
+            catch (Exception ex)
+            {
+                // Manejo de errores
             }
 
-            con.Close();
-
-            // Pasar la lista de resultados a la vista
-            return View("archivopqrs", resultados);
+            ViewBag.Resultados = resultados;
+            return View("ArchivoPQRS", resultados);
         }
 
         // Método para generar el PDF
@@ -529,7 +555,9 @@ namespace controlLuces.Controllers
             connectionString();
             con.Open();
             com.Connection = con;
-            com.CommandText = "SELECT pqrs.*, Estado.Nombre AS EstadoNombre FROM pqrs INNER JOIN Estado ON pqrs.Estado = Estado.IdEstado";
+            com.CommandText = @"SELECT pqrs.*, Estado.Nombre AS EstadoNombre 
+                        FROM pqrs 
+                        INNER JOIN Estado ON pqrs.Estado = Estado.IdEstado";
             SqlDataReader dr = com.ExecuteReader();
 
             List<PqrsModel> pqrsList = new List<PqrsModel>();
@@ -544,9 +572,9 @@ namespace controlLuces.Controllers
                 pqrs.Apellido = dr["Apellido"].ToString();
                 pqrs.TipoDoc = dr["TipoDoc"].ToString();
                 pqrs.Documento = dr["Documento"].ToString();
-                pqrs.BarrioUsuario = dr["BarrioUsuario"].ToString();
+            
                 pqrs.Telefono = dr["Telefono"].ToString();
-                pqrs.DireccionUsuario = dr["DireccionUsuario"].ToString();
+              
                 pqrs.Correo = dr["Correo"].ToString();
                 pqrs.Referencia = dr["Referencia"].ToString();
                 pqrs.DireccionAfectacion = dr["DireccionAfectacion"].ToString();
@@ -554,12 +582,18 @@ namespace controlLuces.Controllers
                 pqrs.TipoAlumbrado = dr["TipoAlumbrado"].ToString();
                 pqrs.DescripcionAfectacion = dr["DescripcionAfectacion"].ToString();
                 pqrs.EstadoNombre = dr["EstadoNombre"].ToString();
+
+                
+                pqrs.DatosRelacionados = dr["DatosRelacionados"] != DBNull.Value
+                                         ? dr["DatosRelacionados"].ToString()
+                                         : null;
+
                 pqrsList.Add(pqrs);
             }
             con.Close();
             return pqrsList;
-
         }
+
         public ActionResult VerInfo(int id)
         {
             // Crear una instancia del modelo PQRS para almacenar la información
@@ -571,7 +605,7 @@ namespace controlLuces.Controllers
             com.Connection = con;
 
             // Consultar la información del PQRS según el ID proporcionado
-            com.CommandText = "SELECT pqrs.*, Estado.Nombre AS EstadoNombre ,pqrs.Imagen AS Imagen FROM pqrs INNER JOIN Estado ON pqrs.Estado = Estado.IdEstado WHERE pqrs.Idpqrs = @Idpqrs";
+            com.CommandText = "SELECT pqrs.*, Estado.Nombre AS EstadoNombre, pqrs.Imagen AS Imagen FROM pqrs INNER JOIN Estado ON pqrs.Estado = Estado.IdEstado WHERE pqrs.Idpqrs = @Idpqrs";
             com.Parameters.AddWithValue("@Idpqrs", id);
 
             try
@@ -591,9 +625,9 @@ namespace controlLuces.Controllers
                     pqrs.Apellido = dr["Apellido"].ToString();
                     pqrs.TipoDoc = dr["TipoDoc"].ToString();
                     pqrs.Documento = dr["Documento"].ToString();
-                    pqrs.BarrioUsuario = dr["BarrioUsuario"].ToString();
+                   
                     pqrs.Telefono = dr["Telefono"].ToString();
-                    pqrs.DireccionUsuario = dr["DireccionUsuario"].ToString();
+                   
                     pqrs.Correo = dr["Correo"].ToString();
                     pqrs.Referencia = dr["Referencia"].ToString();
                     pqrs.DireccionAfectacion = dr["DireccionAfectacion"].ToString();
@@ -603,15 +637,17 @@ namespace controlLuces.Controllers
                     pqrs.Estado = Convert.ToInt32(dr["Estado"]);
                     pqrs.EstadoNombre = dr["EstadoNombre"].ToString();
 
+                    // Asignar el nuevo campo DatosRelacionados
+                    pqrs.DatosRelacionados = dr["DatosRelacionados"].ToString(); // <--- Añadido
+
                     pqrs.img = (byte[])dr["Imagen"];
 
                     string imagenDataUrl = Convert.ToBase64String(pqrs.img);
                     ViewBag.ImagenDataUrl = "data:image/jpeg;base64," + imagenDataUrl;
-
                 }
                 else
                 {
-
+                    // Manejar el caso en el que no se encuentran resultados
                 }
 
                 // Cerrar la conexión con la base de datos
@@ -619,12 +655,12 @@ namespace controlLuces.Controllers
             }
             catch (Exception ex)
             {
-
+                // Manejar la excepción si es necesario
             }
-
 
             return View(pqrs);
         }
+
 
         public ActionResult VerInfo_usuario(int id)
         {
@@ -657,9 +693,9 @@ namespace controlLuces.Controllers
                     pqrs.Apellido = dr["Apellido"].ToString();
                     pqrs.TipoDoc = dr["TipoDoc"].ToString();
                     pqrs.Documento = dr["Documento"].ToString();
-                    pqrs.BarrioUsuario = dr["BarrioUsuario"].ToString();
+                  
                     pqrs.Telefono = dr["Telefono"].ToString();
-                    pqrs.DireccionUsuario = dr["DireccionUsuario"].ToString();
+                    
                     pqrs.Correo = dr["Correo"].ToString();
                     pqrs.Referencia = dr["Referencia"].ToString();
                     pqrs.DireccionAfectacion = dr["DireccionAfectacion"].ToString();
@@ -690,171 +726,8 @@ namespace controlLuces.Controllers
 
             return View(pqrs);
         }
-        public ActionResult ExportarPqrsCompleto()
-        {
-            // Crear una lista para almacenar todos los registros completos de PQRS
-            List<PqrsModel> pqrsList = new List<PqrsModel>();
 
-            try
-            {
-                // Establecer la conexión con la base de datos
-                connectionString();
-                con.Open();
-                com.Connection = con;
-
-                // Consultar toda la información de las PQRS
-                com.CommandText = @"
-            SELECT pqrs.*, Estado.Nombre AS EstadoNombre, pqrs.Imagen AS Imagen 
-            FROM pqrs 
-            INNER JOIN Estado ON pqrs.Estado = Estado.IdEstado";
-
-                SqlDataReader dr = com.ExecuteReader();
-
-                // Recorrer los resultados y llenar la lista
-                while (dr.Read())
-                {
-                    PqrsModel pqrs = new PqrsModel
-                    {
-                        Idpqrs = Convert.ToInt32(dr["Idpqrs"]),
-                        FechaRegistro = dr["FechaRegistro"].ToString(),
-                        Tipopqrs = dr["Tipopqrs"].ToString(),
-                        Canal = dr["Canal"].ToString(),
-                        Nombre = dr["Nombre"].ToString(),
-                        Apellido = dr["Apellido"].ToString(),
-                        TipoDoc = dr["TipoDoc"].ToString(),
-                        Documento = dr["Documento"].ToString(),
-                        BarrioUsuario = dr["BarrioUsuario"].ToString(),
-                        Telefono = dr["Telefono"].ToString(),
-                        DireccionUsuario = dr["DireccionUsuario"].ToString(),
-                        Correo = dr["Correo"].ToString(),
-                        Referencia = dr["Referencia"].ToString(),
-                        DireccionAfectacion = dr["DireccionAfectacion"].ToString(),
-                        BarrioAfectacion = dr["BarrioAfectacion"].ToString(),
-                        TipoAlumbrado = dr["TipoAlumbrado"].ToString(),
-                        DescripcionAfectacion = dr["DescripcionAfectacion"].ToString(),
-                        Estado = Convert.ToInt32(dr["Estado"]),
-                        EstadoNombre = dr["EstadoNombre"].ToString(),
-                        img = dr["Imagen"] as byte[]
-                    };
-
-                    pqrsList.Add(pqrs);
-                }
-
-                dr.Close();
-                con.Close();
-            }
-            catch (Exception ex)
-            {
-                // Manejo de excepciones
-                Console.WriteLine(ex.Message);
-                if (con.State == System.Data.ConnectionState.Open)
-                    con.Close();
-            }
-
-            // Retornar la lista como archivo Excel
-            return new ExcelResult(pqrsList);
-        }
-        public class ExcelResult : ActionResult
-        {
-            private List<PqrsModel> _pqrsList;
-
-            public ExcelResult(List<PqrsModel> pqrsList)
-            {
-                _pqrsList = pqrsList;
-            }
-
-            public override void ExecuteResult(ControllerContext context)
-            {
-                using (var package = new ExcelPackage())
-                {
-                    var worksheet = package.Workbook.Worksheets.Add("PQRS");
-
-                    // Encabezados de las columnas
-                    worksheet.Cells[1, 1].Value = "Consecutivo";
-                    worksheet.Cells[1, 2].Value = "Fecha";
-                    worksheet.Cells[1, 3].Value = "Tipo";
-                    worksheet.Cells[1, 4].Value = "Canal";
-                    worksheet.Cells[1, 5].Value = "Nombre";
-                    worksheet.Cells[1, 6].Value = "Apellido";
-                    worksheet.Cells[1, 7].Value = "TipoDoc";
-                    worksheet.Cells[1, 8].Value = "Documento";
-                    worksheet.Cells[1, 9].Value = "Barrio Usuario";
-                    worksheet.Cells[1, 10].Value = "Teléfono";
-                    worksheet.Cells[1, 11].Value = "Dirección Usuario";
-                    worksheet.Cells[1, 12].Value = "Correo";
-                    worksheet.Cells[1, 13].Value = "Referencia";
-                    worksheet.Cells[1, 14].Value = "Dirección Afectación";
-                    worksheet.Cells[1, 15].Value = "Barrio Afectación";
-                    worksheet.Cells[1, 16].Value = "Tipo Alumbrado";
-                    worksheet.Cells[1, 17].Value = "Descripción Afectación";
-                    worksheet.Cells[1, 18].Value = "Estado";
-                    worksheet.Cells[1, 19].Value = "Estado Nombre";
-                    worksheet.Cells[1, 20].Value = "Imagen";
-
-                    // Llenar la hoja con los datos
-                    for (int i = 0; i < _pqrsList.Count; i++)
-                    {
-                        var pqrs = _pqrsList[i];
-                        worksheet.Cells[i + 2, 1].Value = pqrs.Idpqrs;
-                        worksheet.Cells[i + 2, 2].Value = pqrs.FechaRegistro;
-                        worksheet.Cells[i + 2, 3].Value = pqrs.Tipopqrs;
-                        worksheet.Cells[i + 2, 4].Value = pqrs.Canal;
-                        worksheet.Cells[i + 2, 5].Value = pqrs.Nombre;
-                        worksheet.Cells[i + 2, 6].Value = pqrs.Apellido;
-                        worksheet.Cells[i + 2, 7].Value = pqrs.TipoDoc;
-                        worksheet.Cells[i + 2, 8].Value = pqrs.Documento;
-                        worksheet.Cells[i + 2, 9].Value = pqrs.BarrioUsuario;
-                        worksheet.Cells[i + 2, 10].Value = pqrs.Telefono;
-                        worksheet.Cells[i + 2, 11].Value = pqrs.DireccionUsuario;
-                        worksheet.Cells[i + 2, 12].Value = pqrs.Correo;
-                        worksheet.Cells[i + 2, 13].Value = pqrs.Referencia;
-                        worksheet.Cells[i + 2, 14].Value = pqrs.DireccionAfectacion;
-                        worksheet.Cells[i + 2, 15].Value = pqrs.BarrioAfectacion;
-                        worksheet.Cells[i + 2, 16].Value = pqrs.TipoAlumbrado;
-                        worksheet.Cells[i + 2, 17].Value = pqrs.DescripcionAfectacion;
-                        worksheet.Cells[i + 2, 18].Value = pqrs.Estado;
-                        worksheet.Cells[i + 2, 19].Value = pqrs.EstadoNombre;
-
-                        // Convertir la imagen a base64 y añadirla
-                        if (pqrs.img != null)
-                        {
-                            var base64Image = Convert.ToBase64String(pqrs.img);
-                            worksheet.Cells[i + 2, 20].Value = $"data:image/jpeg;base64,{base64Image}";
-                        }
-                    }
-
-                    // Configurar el tipo de contenido para la respuesta HTTP
-                    var response = context.HttpContext.Response;
-                    response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    response.AddHeader("content-disposition", $"attachment;  filename=archivo_pqrs_completo.xlsx");
-
-                    // Escribir el contenido del archivo al stream de respuesta
-                    response.BinaryWrite(package.GetAsByteArray());
-                }
-            }
-        }
-
-        public ActionResult GraficoTipoPqrs()
-        {
-            // Obtener los datos de PQRS desde el modelo
-            List<PqrsModel> pqrsList = ObtenerPqrs();
-
-            // Contar el número de PQRS por tipo
-            var tipoPqrsCounts = pqrsList.GroupBy(p => p.Tipopqrs)
-                                         .Select(g => new { TipoPqrs = g.Key, Count = g.Count() })
-                                         .ToList();
-
-            // Convertir los datos en un formato adecuado para el gráfico de barras
-            var labels = tipoPqrsCounts.Select(x => x.TipoPqrs).ToArray();
-            var data = tipoPqrsCounts.Select(x => x.Count).ToArray();
-
-            // Pasar los datos al modelo de vista
-            ViewBag.TipoPqrsLabels = labels;
-            ViewBag.TipoPqrsData = data;
-
-            return View("GraficoPqrs");
-        }
-
+       
         public ActionResult GraficoTipoBarrio()
         {
             // Obtener los datos de PQRS desde el modelo
