@@ -253,9 +253,9 @@ namespace controlLuces.Controllers
                 pqrs.Apellido = dr["Apellido"].ToString();
                 pqrs.TipoDoc = dr["TipoDoc"].ToString();
                 pqrs.Documento = dr["Documento"].ToString();
-                pqrs.BarrioUsuario = dr["BarrioUsuario"].ToString();
+             
                 pqrs.Telefono = dr["Telefono"].ToString();
-                pqrs.DireccionUsuario = dr["DireccionUsuario"].ToString();
+           
                 pqrs.Correo = dr["Correo"].ToString();
                 pqrs.Referencia = dr["Referencia"].ToString();
                 pqrs.DireccionAfectacion = dr["DireccionAfectacion"].ToString();
@@ -382,9 +382,9 @@ namespace controlLuces.Controllers
                 pqrs.Apellido = dr["Apellido"].ToString();
                 pqrs.TipoDoc = dr["TipoDoc"].ToString();
                 pqrs.Documento = dr["Documento"].ToString();
-                pqrs.BarrioUsuario = dr["BarrioUsuario"].ToString();
+               
                 pqrs.Telefono = dr["Telefono"].ToString();
-                pqrs.DireccionUsuario = dr["DireccionUsuario"].ToString();
+         ;
                 pqrs.Correo = dr["Correo"].ToString();
                 pqrs.Referencia = dr["Referencia"].ToString();
                 pqrs.DireccionAfectacion = dr["DireccionAfectacion"].ToString();

@@ -29,9 +29,13 @@ namespace controlLuces.Models
         public int IdEstado { get; set; }
         public string EstadoNombre { get; set; }
         public string Descripcion { get; set; }
-        public byte[] Recursos { get; set; } // Variable para almacenar los datos binarios de la imagen
-                                             // Añadida la propiedad Idpqrs
+        //public byte[] Recursos { get; set; } 
+                                             
         public int Idpqrs { get; set; }
+
+        public string observaciones { get; set; }
+
+        public string Trabajos { get; set; }
 
     }
     

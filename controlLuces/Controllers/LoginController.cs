@@ -251,7 +251,6 @@ namespace controlLuces.Controllers
             int cantidadPqrsEstado3 = 0;
             int cantidadOrdenesEstado2 = 0;
 
-
             connectionString();
             con.Open();
             com.Connection = con;
@@ -268,9 +267,7 @@ namespace controlLuces.Controllers
             com.CommandText = "SELECT COUNT(*) FROM pqrs WHERE Estado = 3";
             cantidadPqrsEstado3 = (int)com.ExecuteScalar();
 
-            // Consultar la cantidad de órdenes con estado 2
-            com.CommandText = "SELECT COUNT(*) FROM ordenes_de_servicio WHERE IdEstado = 2";
-            cantidadOrdenesEstado2 = (int)com.ExecuteScalar();
+            cantidadOrdenesEstado2 = cantidadPqrsEstado1 + cantidadPqrsEstado2;
 
 
 

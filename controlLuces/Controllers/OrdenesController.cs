@@ -85,11 +85,11 @@ namespace controlLuces.Controllers
                     Orden.EstadoNombre = dr["EstadoNombre"].ToString();
                     Orden.FechaARealizar = Convert.ToDateTime(dr["fecha_a_realizar"]);
                     Orden.Descripcion = dr["DescripcionCerrada"].ToString();
-                    Orden.Recursos = (byte[])dr["RecursosCerrados"];
-
-                    string imagenDataUrl = Convert.ToBase64String(Orden.Recursos);
-                    ViewBag.ImagenDataUrl = "data:image/jpeg;base64," + imagenDataUrl;
-
+                    //Orden.Recursos = (byte[])dr["RecursosCerrados"];
+                    Orden.Trabajos = dr["Trabajos"].ToString();
+                    //string imagenDataUrl = Convert.ToBase64String(Orden.Recursos);
+                   // ViewBag.ImagenDataUrl = "data:image/jpeg;base64," + imagenDataUrl;
+                    Orden.observaciones = dr["observaciones"].ToString();
 
                 }
                 else
@@ -110,21 +110,21 @@ namespace controlLuces.Controllers
             return View(Orden);
 
         }
-        [PermisosRol(Rol.Administrador, Rol.Tecnico)]
-        public ActionResult verOrdenes()
-        {
-            connectionString();
-            con.Open();
-            com.Connection = con;
-            com.CommandText = "SELECT * from ordenes_de_servicio";
-            SqlDataReader dr = com.ExecuteReader();
-
-            // Lista para almacenar las órdenes de servicio
-            List<OrdenModel> OrdenesList = new List<OrdenModel>();
-
-            // Leer los datos y añadirlos a la lista
-            while (dr.Read())
+            [PermisosRol(Rol.Administrador, Rol.Tecnico)]
+            public ActionResult verOrdenes()
             {
+                connectionString();
+                con.Open();
+                com.Connection = con;
+                com.CommandText = "SELECT * from ordenes_de_servicio";
+                SqlDataReader dr = com.ExecuteReader();
+
+                // Lista para almacenar las órdenes de servicio
+                List<OrdenModel> OrdenesList = new List<OrdenModel>();
+
+                // Leer los datos y añadirlos a la lista
+                while (dr.Read())
+                {
                 OrdenModel Orden = new OrdenModel
                 {
                     IdOrden = dr["id_orden"] != DBNull.Value ? Convert.ToInt32(dr["id_orden"]) : 0,
@@ -141,29 +141,32 @@ namespace controlLuces.Controllers
                     TipoDeSolucion = dr["tipo_de_Solucion"] != DBNull.Value ? dr["tipo_de_Solucion"].ToString() : string.Empty,
                     ClaseDeOrden = dr["clase_de_orden"] != DBNull.Value ? dr["clase_de_orden"].ToString() : string.Empty,
                     ObraRelacionada = dr["obra_relacionada"] != DBNull.Value ? dr["obra_relacionada"].ToString() : string.Empty,
-                    OrdenPrioridad = dr["orden_prioridad"] != DBNull.Value ? dr["orden_prioridad"].ToString() : string.Empty
+                    OrdenPrioridad = dr["orden_prioridad"] != DBNull.Value ? dr["orden_prioridad"].ToString() : string.Empty,
+                    observaciones = dr["observaciones"] != DBNull.Value ? dr["observaciones"].ToString() : string.Empty,
+                    Trabajos = dr["Trabajos"] != DBNull.Value ? dr["Trabajos"].ToString() : string.Empty,
                 };
 
-                OrdenesList.Add(Orden);
+                    OrdenesList.Add(Orden);
+                }
+
+                con.Close();
+
+                // Ordenar la lista de órdenes por FechaARealizar de menor a mayor
+                OrdenesList = OrdenesList.OrderBy(o => o.FechaARealizar).ToList();
+
+                // Debug: Imprimir las fechas para verificar la ordenación
+                foreach (var orden in OrdenesList)
+                {
+                    Console.WriteLine(orden.FechaARealizar.ToString("yyyy-MM-dd"));
+                }
+
+                // Pasar la lista de órdenes a la vista
+                return View(OrdenesList);
             }
 
-            con.Close();
-
-            // Ordenar la lista de órdenes por FechaARealizar de menor a mayor
-            OrdenesList = OrdenesList.OrderBy(o => o.FechaARealizar).ToList();
-
-            // Debug: Imprimir las fechas para verificar la ordenación
-            foreach (var orden in OrdenesList)
-            {
-                Console.WriteLine(orden.FechaARealizar.ToString("yyyy-MM-dd"));
-            }
-
-            // Pasar la lista de órdenes a la vista
-            return View(OrdenesList);
-        }
 
 
-        public ActionResult DescargarOrdenesPDF()
+            public ActionResult DescargarOrdenesPDF()
         {
             connectionString();
             con.Open();
