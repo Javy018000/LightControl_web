@@ -79,106 +79,121 @@
             <a href="@Url.Action("inicio", "Login", new { area = "" })">Light Control</a>
         </div>
 
-        @{
-            if (usuario != null && (usuario.IdRol == Rol.Administrador || usuario.IdRol == Rol.Tecnico))
-            {
-                <a href="#infraestructura" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="fas fa-building"></i> Infraestructura
-                </a>
-                <ul class="collapse list-unstyled" id="infraestructura">
-                    <li>
-                        <a href="#luminarias" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Elementos</a>
-                        <ul class="collapse list-unstyled" id="luminarias">
-                            <li>
-                                <a href="@Url.Action("vertodainfraestructura", "infraestructura", new { area = "", tipo = "LED" })">Luminarias</a>
-                                <a href="">Estructuras de Soporte o Poste</a>
-                                <a href="">Red de Alimentación</a>
-                                <a href="">Canalizaciones</a>
-                                <a href="">Transformadores</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            }
-
-            if (usuario != null && usuario.IdRol == Rol.Administrador)
-            {
-                <a href="#usuarios" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="fas fa-user"></i> Usuarios
-                </a>
-                <ul class="collapse list-unstyled" id="usuarios">
-                    <li>
-                        <a href="@Url.Action("usuarios", "Login", new { area = "" })">Usuarios</a>
-                    </li>
-                </ul>
-            }
-
-            if (usuario != null && usuario.IdRol == Rol.Usuario)
-            {
-                <a href="#pqrs" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="fas fa-comments"></i>PQRS
-                </a>
-                <ul class="collapse list-unstyled" id="pqrs">
-                    <li>
-                        <a href="@Url.Action("pqrssinasignar_usuario", "pqrs", new { area = "" })">listado pqrs</a>
-                    </li>
-                    <li>
-                        <a href="@Url.Action("pqrs", "pqrs", new { area = "" })">Nueva Solicitud</a>
-                    </li>
-                </ul>
-
-                <a href="#ordenes" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="fas fa-clipboard-list"></i> Ordenes de servicio
-                </a>
-                <ul class="collapse list-unstyled" id="ordenes">
-                    <li>
-                        <a href="@Url.Action("monitorear", "Ordenes", new { area = "" })">Historial</a>
-                    </li>
-                </ul>
-            }
-
-            if (usuario != null && (usuario.IdRol == Rol.Administrador || usuario.IdRol == Rol.Tecnico))
-            {
-                <a href="#pqrs" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="fas fa-comments"></i> PQRS
-                </a>
-                <ul class="collapse list-unstyled" id="pqrs">
-                    <li>
-                        <a href="@Url.Action("archivopqrs", "pqrs", new { area = "" })">Historial</a>
-                    </li>
-                    <li>
-                        <a href="@Url.Action("MostrarPqrs", "pqrs", new { area = "" })">Ver todos</a>
-                    </li>
-                    <li>
-                        <a href="@Url.Action("pqrs", "pqrs", new { area = "" })">Nueva Solicitud</a>
-                    </li>
-                    <li>
-                        <a href="@Url.Action("GraficoPqrs", "pqrs", new { area = "" })">Gráficas</a>
-                    </li>
-                </ul>
-
-                <a href="#ordenes" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="fas fa-clipboard-list"></i> Ordenes de servicio
-                </a>
-                <ul class="collapse list-unstyled" id="ordenes">
-                    <li>
-                        <a href="@Url.Action("monitorear", "Ordenes", new { area = "" })">Historial</a>
-                    </li>
-                </ul>
-            }
-
-            if (usuario != null && (usuario.IdRol == Rol.Administrador || usuario.IdRol == Rol.Tecnico))
-            {
-                <a href="#inventarios" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="fas fa-warehouse"></i> Inventarios
-                </a>
-                <ul class="collapse list-unstyled" id="inventarios">
-                    <li>
-                        <a href="@Url.Action("verElementos", "Inventario", new { area = "" })">Ver Items</a>
-                    </li>
-                </ul>
-            }
+        @if (usuario != null && (usuario.IdRol == Rol.Administrador || usuario.IdRol == Rol.Tecnico))
+        {
+            <a href="#infraestructura" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-building"></i> Infraestructura
+            </a>
+            <ul class="collapse list-unstyled" id="infraestructura">
+                <li>
+                    <a href="#luminarias" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Elementos</a>
+                    <ul class="collapse list-unstyled" id="luminarias">
+                        <li>
+                            <a href="@Url.Action("vertodainfraestructura", "infraestructura", new { area = "", tipo = "LED" })">Luminarias</a>
+                            <a href="">Estructuras de Soporte o Poste</a>
+                            <a href="">Red de Alimentación</a>
+                            <a href="">Canalizaciones</a>
+                            <a href="">Transformadores</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         }
+
+        @if (usuario != null && usuario.IdRol == Rol.Administrador)
+        {
+            <a href="#usuarios" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-user"></i> Usuarios
+            </a>
+            <ul class="collapse list-unstyled" id="usuarios">
+                <li>
+                    <a href="@Url.Action("usuarios", "Login", new { area = "" })">Usuarios</a>
+                </li>
+            </ul>
+        }
+
+        @if (usuario != null && usuario.IdRol == Rol.Usuario)
+        {
+            <a href="#pqrs" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-comments"></i>PQRS
+            </a>
+            <ul class="collapse list-unstyled" id="pqrs">
+                <li>
+                    <a href="@Url.Action("pqrssinasignar_usuario", "pqrs", new { area = "" })">listado pqrs</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("pqrs", "pqrs", new { area = "" })">Nueva Solicitud</a>
+                </li>
+            </ul>
+
+            <a href="#ordenes" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-clipboard-list"></i> Ordenes de servicio
+            </a>
+            <ul class="collapse list-unstyled" id="ordenes">
+                <li>
+                    <a href="@Url.Action("monitorear", "Ordenes", new { area = "" })">Historial</a>
+                </li>
+            </ul>
+        }
+
+        @if (usuario != null && (usuario.IdRol == Rol.Administrador || usuario.IdRol == Rol.Tecnico))
+        {
+            <a href="#pqrs" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-comments"></i> PQRS
+            </a>
+            <ul class="collapse list-unstyled" id="pqrs">
+                <li>
+                    <a href="@Url.Action("archivopqrs", "pqrs", new { area = "" })">Historial</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("MostrarPqrs", "pqrs", new { area = "" })">Ver todos</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("pqrs", "pqrs", new { area = "" })">Nueva Solicitud</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("GraficoPqrs", "pqrs", new { area = "" })">Gráficas</a>
+                </li>
+            </ul>
+
+            <a href="#ordenes" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-clipboard-list"></i> Ordenes de servicio
+            </a>
+            <ul class="collapse list-unstyled" id="ordenes">
+                <li>
+                    <a href="@Url.Action("monitorear", "Ordenes", new { area = "" })">Historial</a>
+                </li>
+            </ul>
+        }
+
+        @if (usuario != null && (usuario.IdRol == Rol.Administrador || usuario.IdRol == Rol.Tecnico))
+        {
+            <a href="#inventarios" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-warehouse"></i> Inventarios
+            </a>
+            <ul class="collapse list-unstyled" id="inventarios">
+                <li>
+                    <a href="@Url.Action("verElementos", "Inventario", new { area = "" })">Ver Items</a>
+                </li>
+            </ul>
+        }
+
+        <!-- Nueva opción "Archivo" -->
+        @if (usuario != null)
+        {
+            <a href="#archivo" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-file"></i> Archivo
+            </a>
+            <ul class="collapse list-unstyled" id="archivo">
+                <li>
+                    <a href="@Url.Action("verArchivo", "Archivo", new { area = "" })">Ver Archivo</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("nuevoArchivo", "Archivo", new { area = "" })">Nuevo Archivo</a>
+                </li>
+            </ul>
+        }
+        <!-- Fin de la nueva opción "Archivo" -->
 
         <a href="@Url.Action("CerrarSesion", "Login", new { area = "" })">Cerrar Sesión</a>
     </div>

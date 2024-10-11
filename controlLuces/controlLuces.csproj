@@ -315,6 +315,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ArchivoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\infraestructuraController.cs" />
     <Compile Include="Controllers\InventarioController.cs" />
@@ -471,6 +472,7 @@
     <Content Include="Views\infraestructura\verinfodetallada.cshtml" />
     <Content Include="Views\pqrs\verinfo_usuario.cshtml" />
     <Content Include="Views\pqrs\pqrssinasignar_usuario.cshtml" />
+    <Content Include="Views\Archivo\NuevoArchivo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

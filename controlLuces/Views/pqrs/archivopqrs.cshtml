@@ -255,7 +255,8 @@
                                 <td>@pqrs.EstadoNombre</td>
                                 <td>
                                     <!-- Agregar botones o enlaces para acciones -->
-                                    <a href="@Url.Action("Detalles", new { id = pqrs.Idpqrs })" class="btn btn-info"><i class="fas fa-info-circle"></i> Ver</a>
+                                    <a href="@Url.Action("verInfo", "Pqrs", new { id = pqrs.Idpqrs })" class="btn btn-info"><i class="fas fa-info-circle"></i> Ver Info</a>
+
                                 </td>
                             </tr>
                         }
