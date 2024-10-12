@@ -89,7 +89,7 @@
                 background-color: #c82333;
                 border-color: #bd2130;
                 color: #fff; /* Mantiene el texto blanco */
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Efecto de resplandor */
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); 
             }
 
         .btn-success {
@@ -212,7 +212,8 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Consecutivo</th>
+                        <th>IdPqrs</th>
+
                         <th>Fecha</th>
                         <th>Tipo</th>
                         <th>Canal</th>
@@ -237,7 +238,8 @@
                         foreach (var pqrs in Model)
                         {
                             <tr>
-                                <td>@pqrs.Consecutivo</td>
+                                <td>@pqrs.Idpqrs</td>
+                              
                                 <td>@pqrs.FechaRegistro</td>
                                 <td>@pqrs.Tipopqrs</td>
                                 <td>@pqrs.Canal</td>
@@ -272,7 +274,7 @@
         </div>
 
         <div class="button-container">
-            <button class="btn btn-excel"><i class="fas fa-file-excel mr-2"></i> Exportar a Excel</button>
+            <button class="btn btn-excel"><i class="fas fa-file-excel mr-2"></i> Exportar</button>
             <a href="@Url.Action("Index", "Home")" class="btn btn-back"><i class="fas fa-arrow-left mr-2"></i> Atrás</a>
         </div>
     </div>

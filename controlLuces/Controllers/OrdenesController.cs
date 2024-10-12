@@ -42,9 +42,8 @@ namespace controlLuces.Controllers
 
         public ActionResult verinfo(int id)
         {
-
             OrdenModel Orden = new OrdenModel();
-
+            Orden.Imagenes = new List<ImagenOrdenServicioModel>(); // Inicializar la lista de imágenes
 
             connectionString();
             con.Open();
@@ -55,7 +54,6 @@ namespace controlLuces.Controllers
             com.CommandText = "SELECT ordenes_de_servicio.*, Ordenes_Cerradas.Descripcion AS DescripcionCerrada, Ordenes_Cerradas.Recursos AS RecursosCerrados, Estado.Nombre AS EstadoNombre FROM ordenes_de_servicio INNER JOIN Estado ON ordenes_de_servicio.IdEstado = Estado.IdEstado LEFT JOIN Ordenes_Cerradas ON ordenes_de_servicio.id_orden = Ordenes_Cerradas.Id_Orden_Servicio WHERE ordenes_de_servicio.id_orden = @Idorden";
             com.Parameters.AddWithValue("@Idorden", id);
 
-
             try
             {
                 // Ejecutar la consulta y obtener un lector de datos
@@ -64,17 +62,13 @@ namespace controlLuces.Controllers
                 // Verificar si se encontraron resultados
                 if (dr.Read())
                 {
-
-
-                    // Obtener los valores de las columnas y asignarlos al modelo PQRS
+                    // Obtener los valores de las columnas y asignarlos al modelo Orden
                     Orden.IdOrden = Convert.ToInt32(dr["id_orden"]);
-
                     Orden.IdEstado = Convert.ToInt32(dr["IdEstado"]);
                     Orden.CodigoDeElemento = dr["codigo_de_elemento"].ToString();
                     Orden.ElementoRelacionado = dr["elemento_relacionado"].ToString();
                     Orden.ProblemaRelacionado = dr["problema_relacionado"].ToString();
                     Orden.ProblemaValidado = dr["problema_validado"].ToString();
-
                     Orden.TipoDeElemento = dr["Tipo_de_elemento"].ToString();
                     Orden.TipoDeSolucion = dr["tipo_de_Solucion"].ToString();
                     Orden.TipoDeOrden = dr["tipo_de_orden"].ToString();
@@ -85,32 +79,45 @@ namespace controlLuces.Controllers
                     Orden.EstadoNombre = dr["EstadoNombre"].ToString();
                     Orden.FechaARealizar = Convert.ToDateTime(dr["fecha_a_realizar"]);
                     Orden.Descripcion = dr["DescripcionCerrada"].ToString();
-                    //Orden.Recursos = (byte[])dr["RecursosCerrados"];
                     Orden.Trabajos = dr["Trabajos"].ToString();
-                    //string imagenDataUrl = Convert.ToBase64String(Orden.Recursos);
-                   // ViewBag.ImagenDataUrl = "data:image/jpeg;base64," + imagenDataUrl;
                     Orden.observaciones = dr["observaciones"].ToString();
-
                 }
-                else
+
+                dr.Close(); // Cerrar el DataReader antes de abrir una nueva consulta
+
+                // Consultar las imágenes asociadas a la orden
+                com.CommandText = "SELECT id_imagen, id_orden, imagen, fecha_subida FROM ImagenesOrdenesDeServicio WHERE id_orden = @Idorden";
+                com.Parameters.Clear(); // Limpiar los parámetros antes de reutilizarlos
+                com.Parameters.AddWithValue("@Idorden", id);
+
+                SqlDataReader drImagenes = com.ExecuteReader();
+
+                while (drImagenes.Read())
                 {
+                    ImagenOrdenServicioModel imagen = new ImagenOrdenServicioModel
+                    {
+                        IdImagen = Convert.ToInt32(drImagenes["id_imagen"]),
+                        IdOrden = Convert.ToInt32(drImagenes["id_orden"]),
+                        Imagen = (byte[])drImagenes["imagen"],
+                        FechaSubida = Convert.ToDateTime(drImagenes["fecha_subida"])
+                    };
 
+                    Orden.Imagenes.Add(imagen); // Agregar la imagen a la lista de imágenes
                 }
 
-                // Cerrar la conexión con la base de datos
-                con.Close();
+                drImagenes.Close(); // Cerrar el DataReader de imágenes
+                con.Close(); // Cerrar la conexión con la base de datos
             }
             catch (Exception ex)
             {
-
-
+                // Manejo de excepciones (opcional)
             }
 
-
             return View(Orden);
-
         }
-            [PermisosRol(Rol.Administrador, Rol.Tecnico)]
+
+
+        [PermisosRol(Rol.Administrador, Rol.Tecnico)]
             public ActionResult verOrdenes()
             {
                 connectionString();
@@ -608,6 +615,7 @@ namespace controlLuces.Controllers
             return View("monitorear", ordenes); // Redirige al Index con los resultados de la búsqueda
         }
 
+        
         public ActionResult ObtenerFormulario(string opcion, string idPqrs, string descripcionAfectacion)
         {
             ObtenerCuadrilla();

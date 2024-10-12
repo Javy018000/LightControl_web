@@ -102,6 +102,26 @@
                     background-color: #c82333;
                     color: white;
                 }
+
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .image-item {
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+            max-width: 150px;
+        }
+
+            .image-item img {
+                width: 100%;
+                height: auto;
+            }
     </style>
 </head>
 <body>
@@ -151,7 +171,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Fecha a Realizar:</label>
-                                    <input type="text" name="FechaARealizar" class="form-control" value="@Model.FechaARealizar" readonly />
+                                    <input type="text" name="FechaARealizar" class="form-control" value="@Model.FechaARealizar.ToString("dd/MM/yyyy")" readonly />
                                 </div>
                                 <div class="form-group">
                                     <label>Cuadrilla:</label>
@@ -186,25 +206,36 @@
                                     <input type="text" name="Descripcion" class="form-control" value="@Model.Descripcion" readonly />
                                 </div>
                                 <div class="form-group">
-                                    <label>observaciones:</label>
+                                    <label>Observaciones:</label>
                                     <input type="text" name="observaciones" class="form-control" value="@Model.observaciones" readonly />
                                 </div>
                                 <div class="form-group">
                                     <label>Trabajos:</label>
                                     <input type="text" name="Trabajos" class="form-control" value="@Model.Trabajos" readonly />
                                 </div>
-                                <div class="form-group">
-                                    <label>Recursos:</label>
-                                    <img src="@ViewBag.ImagenDataUrl" alt="Recursos" width="300" height="300">
-                                </div>
                             </div>
-                        </div> 
-                        <div class="form-group text-center">
-                            <button type="button" class="btn btn-danger btnSubmit" onclick="location.href='@Url.Action("verOrdenes", "ordenes")'">
-                                <i class="fas fa-arrow-left"></i> Atrás
-                            </button>
                         </div>
-                    </div> 
+                        <div class="form-group">
+                            <label>Recursos:</label>
+                            <div class="image-container">
+                                @if (Model.Imagenes != null && Model.Imagenes.Count > 0)
+                                {
+                                    foreach (var imagen in Model.Imagenes)
+                                    {
+                                        string base64Image = Convert.ToBase64String(imagen.Imagen);
+                                        string imgSrc = $"data:image/jpeg;base64,{base64Image}"; // Asumiendo que las imágenes son JPEG
+                                        <div class="image-item">
+                                            <img src="@imgSrc" alt="Imagen @imagen.IdImagen" />
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <p>No hay imágenes disponibles.</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </article>
         </div>

@@ -36,8 +36,16 @@ namespace controlLuces.Models
         public string observaciones { get; set; }
 
         public string Trabajos { get; set; }
-
+        public List<ImagenOrdenServicioModel> Imagenes { get; set; }
     }
+
+    public class ImagenOrdenServicioModel
+    {
+        public int IdImagen { get; set; }  // Correspondiente a 'id_imagen'
+        public int IdOrden { get; set; }    // Correspondiente a 'id_orden'
+        public byte[] Imagen { get; set; }  // Correspondiente a 'imagen'
+        public DateTime FechaSubida { get; set; } // Correspondiente a 'fecha_subida'
+    }
+}
     
 
-}
