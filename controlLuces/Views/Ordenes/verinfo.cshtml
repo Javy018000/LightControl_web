@@ -1,6 +1,4 @@
-﻿@{
-    Layout = null;
-}
+﻿
 
 @model controlLuces.Models.OrdenModel
 
@@ -167,6 +165,14 @@
                                     <label>Prioridad de Ruta:</label>
                                     <input type="text" name="PrioridadDeRuta" class="form-control" value="@Model.PrioridadDeRuta" readonly />
                                 </div>
+                                <div class="form-group">
+                                    <label>Descripción:</label>
+                                    <input type="text" name="Descripcion" class="form-control" value="@Model.Descripcion" readonly />
+                                </div>
+                                <div class="form-group">
+                                    <label>Observaciones:</label>
+                                    <input type="text" name="observaciones" class="form-control" value="@Model.observaciones" readonly />
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -200,14 +206,6 @@
                                 <div class="form-group">
                                     <label>Estado Nombre:</label>
                                     <input type="text" name="EstadoNombre" class="form-control" value="@Model.EstadoNombre" readonly />
-                                </div>
-                                <div class="form-group">
-                                    <label>Descripción:</label>
-                                    <input type="text" name="Descripcion" class="form-control" value="@Model.Descripcion" readonly />
-                                </div>
-                                <div class="form-group">
-                                    <label>Observaciones:</label>
-                                    <input type="text" name="observaciones" class="form-control" value="@Model.observaciones" readonly />
                                 </div>
                                 <div class="form-group">
                                     <label>Trabajos:</label>
